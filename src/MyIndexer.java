@@ -95,7 +95,8 @@ public class MyIndexer {
         pw.close();
     }
 
-    private Document createDocument(File file) throws FileNotFoundException {
+    private Document createDocument(File file) {
+        // For HTML files
         Document document = new Document();
         try {
             int id = Integer.parseInt(file.getName().split("\\.")[0]);
@@ -116,11 +117,48 @@ public class MyIndexer {
             Field urlField = new StringField("urlField", url, Field.Store.YES);
             Field contentField = new TextField("contentField", text, Field.Store.YES);
             Field prField = new FloatDocValuesField("prField", (float)pr);
+            Field typeField = new StringField("typeField", "HTML", Field.Store.YES);
             document.add(titleField);
             document.add(idField);
             document.add(urlField);
             document.add(contentField);
             document.add(prField);
+            document.add(typeField);
+            return document;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Document createDocument(File file, String type) {
+        // For doc docx pdf Files
+        Document document = new Document();
+        try {
+            int id = Integer.parseInt(file.getName().split("\\.")[0]);
+            String text = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+            String url = id2url.get(id);
+            String title;
+            try {
+                title = url.substring(url.lastIndexOf('/')+1);
+                System.out.println(title);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            double pr = id2pageRank.get(id);
+            Field idField = new StringField("idField", String.valueOf(id), Field.Store.YES);
+            Field titleField = new TextField("titleField", title, Field.Store.YES);
+            Field urlField = new StringField("urlField", url, Field.Store.YES);
+            Field contentField = new TextField("contentField", text, Field.Store.YES);
+            Field prField = new FloatDocValuesField("prField", (float)pr);
+            Field typeField = new StringField("typeField", type, Field.Store.YES);
+            document.add(titleField);
+            document.add(idField);
+            document.add(urlField);
+            document.add(contentField);
+            document.add(prField);
+            document.add(typeField);
             return document;
         } catch (IOException e) {
             e.printStackTrace();
@@ -131,6 +169,7 @@ public class MyIndexer {
     private void createIndex(String dataDirPath) {
         int n = id2url.size();
 //        int n = 1000;
+        // Create HTML files
         for(int i = 0; i < n; ++i) {
             File file = new File(dataDirPath + "\\" + String.valueOf(i) + ".txt");
             try {
@@ -147,6 +186,40 @@ public class MyIndexer {
                 System.out.println(i);
             }
         }
+        // PDFs
+        File pdfs = new File(dataDirPath + "\\" + "pdfs");
+        for (File file : pdfs.listFiles()) {
+            Document document = createDocument(file, "PDF");
+            if (document != null) {
+                try {
+                    indexWriter.addDocument(document);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        File docs = new File(dataDirPath + "\\" + "docs");
+        for (File file : pdfs.listFiles()) {
+            Document document = createDocument(file, "DOC");
+            if (document != null) {
+                try {
+                    indexWriter.addDocument(document);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        File docxs = new File(dataDirPath + "\\" + "docxs");
+        for (File file : pdfs.listFiles()) {
+            Document document = createDocument(file, "DOCX");
+            if (document != null) {
+                try {
+                    indexWriter.addDocument(document);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         try {
             indexWriter.close();
         } catch (IOException e) {
@@ -155,7 +228,7 @@ public class MyIndexer {
     }
 
     public static void main(String[] args) {
-        MyIndexer myIndexer = new MyIndexer("index");
+        MyIndexer myIndexer = new MyIndexer("index-new");
         myIndexer.getId2Url(new File("E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\preprocess\\id2url.txt"));
         myIndexer.getId2PageRank(new File("E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\preprocess\\page_rank.txt"));
         myIndexer.getTitle(new File("E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\preprocess\\titles.txt"));
