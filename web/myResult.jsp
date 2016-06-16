@@ -1,4 +1,7 @@
-<%--
+<%@ page import="org.apache.lucene.search.ScoreDoc" %>
+<%@ page import="org.apache.lucene.document.Document" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="javax.print.Doc" %><%--
   Created by IntelliJ IDEA.
   User: lzhengning
   Date: 6/16/16
@@ -125,15 +128,22 @@
             </div>
 
             <div id="search-all" class="tab-pane fade in active">
-                <% for (int i = 0; i < 5; ++i) { %>
+                <%
+                    Document[] docs = (Document []) request.getAttribute("docs");
+                    for (Document doc : docs) {
+                %>
                 <div class="search-result-entry">
                     <div class="entry-name lead text-info">
                         <a href="www.tsinghua.edu.cn">
-                            清华大学 - Tsinghua University
+                            <%= doc.get("titleField") %>
                         </a>
                     </div>
-                    <div class="entry-url text-success">www.tsinghua.edu.cn/</div>
-                    <div class="entry-content">邱勇校长：有你的清华会更美——致2016年高考考生的邀请信. 水木清华，钟灵毓秀。 在这个美好的日子里，我代表<mark>清华大学</mark>向你发出诚挚的邀请，欢迎你加入清华人的 ...</div>
+                    <div class="entry-url text-success">
+                        <%= doc.get("urlField") %>
+                    </div>
+                    <div class="entry-content">
+                        <%= doc.get("contentField") %>
+                    </div>
                 </div>
                 <div class="divider"></div>
                 <% } %>
