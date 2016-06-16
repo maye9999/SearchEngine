@@ -4,10 +4,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.FuzzyQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.QueryBuilder;
 import org.lionsoul.jcseg.analyzer.v5x.JcsegAnalyzer5X;
@@ -88,20 +85,27 @@ public class MySearcher {
     }
 
     public Query buildQuery(String queryString) {
-//        QueryBuilder builder = new QueryBuilder(analyzer);
-//        Query query4 = builder.createMinShouldMatchQuery("contentField", queryString, 1f);
-//        Query query1 = builder.createMinShouldMatchQuery("titleField", queryString, 1f);
-//        Query query2 = builder.createMinShouldMatchQuery("h1Field", queryString, 1f);
-//        Query query3 = builder.createMinShouldMatchQuery("h2Field", queryString, 1f);
-//        Query q1 = new BoostQuery(query1, 6f);
-//        Query q2 = new BoostQuery(query2, 3f);
-//        Query q3 = new BoostQuery(query3, 1.5f);
-//        Query q4 = new BoostQuery(query4, 1f);
-//        Query q = new BooleanQuery.Builder().add(q1, BooleanClause.Occur.SHOULD).add(q2, BooleanClause.Occur.SHOULD)
-//                .add(q3, BooleanClause.Occur.SHOULD).add(q4, BooleanClause.Occur.SHOULD).build();
+        QueryBuilder builder = new QueryBuilder(analyzer);
+        Query query4 = builder.createMinShouldMatchQuery("contentField", queryString, 1f);
+        Query query1 = builder.createMinShouldMatchQuery("titleField", queryString, 1f);
+        Query query2 = builder.createMinShouldMatchQuery("h1Field", queryString, 1f);
+        Query query3 = builder.createMinShouldMatchQuery("h2Field", queryString, 1f);
+        Query q1 = new BoostQuery(query1, 6f);
+        Query q2 = new BoostQuery(query2, 3f);
+        Query q3 = new BoostQuery(query3, 1.5f);
+        Query q4 = new BoostQuery(query4, 1f);
+        Query q = new BooleanQuery.Builder().add(q1, BooleanClause.Occur.SHOULD).add(q2, BooleanClause.Occur.SHOULD)
+                .add(q3, BooleanClause.Occur.SHOULD).add(q4, BooleanClause.Occur.SHOULD).build();
 //        Query q = new WildcardQuery(new Term("urlField", "*c?.tsinghua.edu.cn*"));
-        Query q = new FuzzyQuery(new Term("titleField", "机算机系"));
+//        Query q = new FuzzyQuery(new Term("titleField", "机算机系"));
         return q;
+    }
+
+    public ScoreDoc[] searchComplex(String stringMust, String stringShould, String stringNo, int maxNum) {
+        String[] stringsMust = stringMust.split(" ");
+        String[] stringsShould = stringShould.split(" ");
+        String[] stringsNo = stringNo.split(" ");
+        return null;
     }
 
     public ScoreDoc[] search(String queryString, int maxNum) {
