@@ -28,7 +28,7 @@ public class MyIndexer {
     private HashMap<Integer, String> id2h2;
 
     private final String[] blacklist = {"erelaw.tsinghua.edu.cn/NewsPL.asp?",
-            "qh.daf.tsinghua.edu.cn/", "93001.tsinghua.edu.cn:8081/"};
+            "qh.daf.tsinghua.edu.cn/", "93001.tsinghua.edu.cn:8081/", "syskfgl.cic.tsinghua.edu.cn/"};
 
 
     public MyIndexer(String indexDir){
