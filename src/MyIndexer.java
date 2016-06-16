@@ -234,6 +234,9 @@ public class MyIndexer {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
             }
             if (i % 1000 == 0) {
                 System.out.println(i);
@@ -247,7 +250,7 @@ public class MyIndexer {
             if (document != null) {
                 try {
                     indexWriter.addDocument(document);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -259,7 +262,7 @@ public class MyIndexer {
             if (document != null) {
                 try {
                     indexWriter.addDocument(document);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -270,7 +273,7 @@ public class MyIndexer {
             if (document != null) {
                 try {
                     indexWriter.addDocument(document);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

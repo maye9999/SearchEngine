@@ -151,7 +151,7 @@ public class MySimilarity extends Similarity{
             // if there are no norms, we act as if b=0
             float p = Float.intBitsToFloat((int)pr.get(doc));
             float norm = norms == null ? k1 : cache[(byte)norms.get(doc) & 0xFF];
-            return weightValue * freq / (freq + norm) * (float)Math.pow(p, 0.2);
+            return weightValue * freq / (freq + norm) * (float)Math.pow(p, 1);
         }
 
         @Override
