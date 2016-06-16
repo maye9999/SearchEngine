@@ -122,7 +122,7 @@ public class MySearcher {
         mySearcher.getId2PageRank();
 //        System.out.println("avgLength = " + mySearcher.getAvgLength());
 
-        ScoreDoc[] hits = mySearcher.search("清华大学", 100);
+        ScoreDoc[] hits = mySearcher.search("刘奕群", 100);
         for (ScoreDoc hit : hits) {
             Document doc = mySearcher.getDoc(hit.doc);
             int id = Integer.parseInt(doc.get("idField"));
