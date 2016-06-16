@@ -1,3 +1,4 @@
+import org.apache.lucene.document.Document;
 import org.apache.lucene.search.ScoreDoc;
 
 import javax.servlet.ServletException;
@@ -10,7 +11,7 @@ import java.io.IOException;
  */
 public class ResultServlet extends javax.servlet.http.HttpServlet {
     MySearcher searcher;
-    final String indexPosition = "E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\project\\SearchEngine\\index-new-analyzer";
+    final String indexPosition = "/Users/lzhengning/Desktop/index-new-analyzer";
 
     @Override
     public void init() throws ServletException {
@@ -21,8 +22,14 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ScoreDoc[] hits = searcher.search(request.getParameter("query"), 10);
+        Document[] docs = new Document[hits.length];
+        System.out.println("hits number = " + hits.length);
+        for (int i = 0; i < hits.length; ++i) {
+            docs[i] = searcher.getDoc(hits[i].doc);
+            System.out.println("title : " + docs[i].get("titleField"));
+        }
         request.setAttribute("currentQuery", request.getParameter("query"));
-        request.setAttribute("result", hits);
+        request.setAttribute("docs", docs);
         request.getRequestDispatcher("myResult.jsp").forward(request, response);
     }
 }

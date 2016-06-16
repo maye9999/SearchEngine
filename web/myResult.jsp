@@ -1,4 +1,7 @@
-<%--
+<%@ page import="org.apache.lucene.search.ScoreDoc" %>
+<%@ page import="org.apache.lucene.document.Document" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="javax.print.Doc" %><%--
   Created by IntelliJ IDEA.
   User: lzhengning
   Date: 6/16/16
@@ -46,7 +49,7 @@
                 <form class="navbar-form">
                     <div class="form-group">
                         <div class="input-group">
-                            <input type="text" class="form-control" value="thu">
+                            <input type="text" class="form-control" value='<%= request.getAttribute("currentQuery")%>'>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
                         </div>
                     </div>
@@ -60,6 +63,7 @@
             <li class="active"><a data-toggle="tab" href="#search-all">所有</a></li>
             <li><a data-toggle="tab" href="#search-web">网页</a></li>
             <li><a data-toggle="tab" href="#search-document">文档</a></li>
+            <li><a data-toggle="tab" href="#fuzzy-query">模糊查询</a></li>
             <li><a data-toggle="collapse" href="#advanced-search">高级搜索</a></li>
         </ul>
 
@@ -104,6 +108,16 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">关键词位于</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="keyword-pos">
+                                    <option>任何地方</option>
+                                    <option>仅出现在网站或者文档的标题中</option>
+                                    <option>进出现在 URL 中</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group" style="margin-bottom: 0">
                             <div class="col-md-offset-10 col-md-2">
                                 <button type="submit" class="btn btn-primary">重新搜索</button>
@@ -114,15 +128,29 @@
             </div>
 
             <div id="search-all" class="tab-pane fade in active">
-                <% for (int i = 0; i < 5; ++i) { %>
+                <%
+                    Document[] docs = (Document []) request.getAttribute("docs");
+                    for (Document doc : docs) {
+                %>
                 <div class="search-result-entry">
                     <div class="entry-name lead text-info">
                         <a href="www.tsinghua.edu.cn">
-                            清华大学 - Tsinghua University
+                            <%= doc.get("titleField") %>
                         </a>
                     </div>
-                    <div class="entry-url text-success">www.tsinghua.edu.cn/</div>
-                    <div class="entry-content">邱勇校长：有你的清华会更美——致2016年高考考生的邀请信. 水木清华，钟灵毓秀。 在这个美好的日子里，我代表<mark>清华大学</mark>向你发出诚挚的邀请，欢迎你加入清华人的 ...</div>
+                    <div class="entry-url text-success">
+                        <%= doc.get("urlField") %>
+                    </div>
+                    <div class="entry-content">
+                        <%
+                            String content = doc.get("contentField");
+                            if (content.length() > 100) {
+                                out.println(content.substring(0, 100) + "...");
+                            } else {
+                                out.println(content);
+                            }
+                        %>
+                    </div>
                 </div>
                 <div class="divider"></div>
                 <% } %>
@@ -141,6 +169,19 @@
                 <% } %>
             </div>
             <div id="search-document" class="tab-pane fade">
+                <% for (int i = 0; i < 10; ++i) { %>
+                <div class="search-result-entry">
+                    <div class="entry-name lead text-info">
+                        <a href="www.tsinghua.edu.cn">
+                            清华大学 - Tsinghua University
+                        </a>
+                    </div>
+                    <div class="entry-url text-success">www.tsinghua.edu.cn/</div>
+                    <div class="entry-content">邱勇校长：有你的清华会更美——致2016年高考考生的邀请信. 水木清华，钟灵毓秀。 在这个美好的日子里，我代表<mark>清华大学</mark>向你发出诚挚的邀请，欢迎你加入清华人的 ...</div>
+                </div>
+                <% } %>
+            </div>
+            <div id="fuzzy-query" class="tab-pane fade">
                 <% for (int i = 0; i < 10; ++i) { %>
                 <div class="search-result-entry">
                     <div class="entry-name lead text-info">
