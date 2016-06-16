@@ -1,0 +1,23 @@
+.search-result {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.search-result-entry {
+    /*box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);*/
+    margin-bottom: 20px;
+    /*padding: 7px;*/
+    width: 666px;
+}
+
+.search-result-entry:hover {
+    background-color: #f7f7f7;
+}
+
+.entry-name {
+    margin-bottom: 0px;
+}
+
+.entry-url {
+
+}

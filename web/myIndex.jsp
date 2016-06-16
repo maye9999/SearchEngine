@@ -20,7 +20,8 @@
         <link rel="stylesheet" href="/css/font-awesome.min.css">
 
         <link rel="stylesheet" href="/css/index.css">
-    <title>THU Search</title>
+
+        <title>THU Search</title>
 
     </head>
     <body>
@@ -29,7 +30,7 @@
                 <div class="top-header"></div>
                 <div class="site-container">
                     <div class="logo-index">
-                        <img src="/image/logo_sm.png">
+                        <img src="/image/logo.png">
                     </div>
                     <div>
                         <h1>ThuThuGo</h1>
