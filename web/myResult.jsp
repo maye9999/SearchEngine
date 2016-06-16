@@ -49,7 +49,7 @@
                 <form class="navbar-form">
                     <div class="form-group">
                         <div class="input-group">
-                            <input type="text" class="form-control" value="thu">
+                            <input type="text" class="form-control" value='<%= request.getAttribute("currentQuery")%>'>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
                         </div>
                     </div>
@@ -142,7 +142,14 @@
                         <%= doc.get("urlField") %>
                     </div>
                     <div class="entry-content">
-                        <%= doc.get("contentField") %>
+                        <%
+                            String content = doc.get("contentField");
+                            if (content.length() > 100) {
+                                out.println(content.substring(0, 100) + "...");
+                            } else {
+                                out.println(content);
+                            }
+                        %>
                     </div>
                 </div>
                 <div class="divider"></div>
