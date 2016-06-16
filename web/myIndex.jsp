@@ -35,9 +35,9 @@
                     <div>
                         <h1>ThuThuGo</h1>
                         <div class="input-group">
-                            <input type="text" class="form-control input-lg" placeholder="Search for ...">
+                            <input type="text" class="form-control input-lg" id="query" placeholder="Search for ...">
                             <span class="input-group-btn">
-                                <button class="btn btn-lg btn-default" type="button"><i class="fa fa-search"></i></button>
+                                <button class="btn btn-lg btn-default" type="button" onclick="search()"><i class="fa fa-search"></i></button>
                             </span>
                         </div>
                     </div>
@@ -50,5 +50,14 @@
 
         <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
         <script src="/js/bootstrap.min.js"></script>
+
+        <script>
+            function search() {
+                console.log('clicked')
+                var queryString = $("#query").val();
+                var s = "/result?query=" + queryString + "&page=" + 1;
+                window.location.href = s;
+            }
+        </script>
     </body>
 </html>

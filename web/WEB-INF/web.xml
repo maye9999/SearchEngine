@@ -5,7 +5,7 @@
          version="3.1">
     <servlet>
         <servlet-name>Index</servlet-name>
-        <servlet-class>server.IndexServlet</servlet-class>
+        <servlet-class>IndexServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Index</servlet-name>
@@ -13,7 +13,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Result</servlet-name>
-        <servlet-class>server.ResultServlet</servlet-class>
+        <servlet-class>ResultServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Result</servlet-name>

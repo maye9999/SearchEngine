@@ -1,5 +1,3 @@
-package server;
-
 import java.io.IOException;
 
 /**
@@ -7,12 +5,10 @@ import java.io.IOException;
  */
 
 public class IndexServlet extends javax.servlet.http.HttpServlet {
-    @Override
-    protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-    }
 
     @Override
     protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+
         request.getRequestDispatcher("myIndex.jsp").forward(request, response);
     }
 }
