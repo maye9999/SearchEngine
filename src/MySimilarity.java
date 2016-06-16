@@ -31,7 +31,7 @@ public class MySimilarity extends Similarity{
     }
 
     public MySimilarity() {
-        this(2.0f, 0.75f);
+        this(1.2f, 0.75f);
     }
 
     protected float idf(long docFreq, long numDocs) {
@@ -151,7 +151,7 @@ public class MySimilarity extends Similarity{
             // if there are no norms, we act as if b=0
             float p = Float.intBitsToFloat((int)pr.get(doc));
             float norm = norms == null ? k1 : cache[(byte)norms.get(doc) & 0xFF];
-            return weightValue * freq / (freq + norm) * (float)Math.pow(p, 1);
+            return weightValue * freq / (freq + norm) * (float)Math.pow(p, 0.5);
         }
 
         @Override
