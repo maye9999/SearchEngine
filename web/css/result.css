@@ -1,13 +1,10 @@
 .search-result {
     margin-top: 20px;
     margin-bottom: 20px;
+    width: 666px;
 }
 
 .search-result-entry {
-    /*box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);*/
-    margin-bottom: 20px;
-    /*padding: 7px;*/
-    width: 666px;
 }
 
 .search-result-entry:hover {
@@ -20,4 +17,16 @@
 
 .entry-url {
 
+}
+
+.divider {
+    height: 1px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #e5e5e5;
+}
+
+.advance-search-form {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

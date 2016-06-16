@@ -57,16 +57,62 @@
 
     <div class="container">
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#search-all">All</a></li>
-            <li><a data-toggle="tab" href="#search-web">Web</a></li>
-            <li><a data-toggle="tab" href="#search-document">Document</a></li>
-            <li><a data-toggle="collapse" href="#advanced-search">Advanced Search</a></li>
+            <li class="active"><a data-toggle="tab" href="#search-all">所有</a></li>
+            <li><a data-toggle="tab" href="#search-web">网页</a></li>
+            <li><a data-toggle="tab" href="#search-document">文档</a></li>
+            <li><a data-toggle="collapse" href="#advanced-search">高级搜索</a></li>
         </ul>
-        <div id="advanced-search" class="collapse">
-            Lorem ipsum dolor text....
-        </div>
 
         <div class="tab-content search-result">
+            <div id="advanced-search" class="collapse panel panel-primary advance-search-form">
+                <div class="panel-heading">
+                    高级搜索选项
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">包含以下全部的关键词</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="all-keywords" placeholder="例如: 清华大学 计算机系">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">包含以下任意一个关键词</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="any-keywords" placeholder="例如: 清华大学 计算机系">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">不包含以下任意一个关键词</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="no-keywords" placeholder="例如: 心理系">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">限定搜索指定的网站</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="in-site" placeholder="例如: cs.tsinghua.edu.cn">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">搜索文档格式</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="doc-type">
+                                    <option>所有网页文档</option>
+                                    <option>PDF</option>
+                                    <option>Word 文档</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-10 col-md-2">
+                                <button type="submit" class="btn btn-primary" style="margin-bottom: 0">重新搜索</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div id="search-all" class="tab-pane fade in active">
                 <% for (int i = 0; i < 5; ++i) { %>
                 <div class="search-result-entry">
@@ -78,6 +124,7 @@
                     <div class="entry-url text-success">www.tsinghua.edu.cn/</div>
                     <div class="entry-content">邱勇校长：有你的清华会更美——致2016年高考考生的邀请信. 水木清华，钟灵毓秀。 在这个美好的日子里，我代表<mark>清华大学</mark>向你发出诚挚的邀请，欢迎你加入清华人的 ...</div>
                 </div>
+                <div class="divider"></div>
                 <% } %>
             </div>
             <div id="search-web" class="tab-pane fade">
