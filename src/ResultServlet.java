@@ -10,11 +10,12 @@ import java.io.IOException;
  */
 public class ResultServlet extends javax.servlet.http.HttpServlet {
     MySearcher searcher;
+    final String indexPosition = "E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\project\\SearchEngine\\index-new-analyzer";
 
     @Override
     public void init() throws ServletException {
         super.init();
-        searcher = new MySearcher("index-new-analyzer");
+        searcher = new MySearcher(indexPosition);
     }
 
     @Override
