@@ -21,7 +21,9 @@
 
     <link rel="stylesheet" href="/css/result.css">
 
-    <title>清华大学 - 搜索结果</title>
+    <title>
+        <%=request.getAttribute("currentQuery") %> - 搜索结果
+    </title>
 </head>
 
 <body>
@@ -41,7 +43,6 @@
             </div>
 
             <div class="navbar-collapse collapse" id="navbar-collapsible">
-
                 <form class="navbar-form">
                     <div class="form-group">
                         <div class="input-group">
@@ -51,7 +52,6 @@
                     </div>
                 </form>
             </div>
-
         </div>
     </nav>
 
@@ -104,9 +104,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="margin-bottom: 0">
                             <div class="col-md-offset-10 col-md-2">
-                                <button type="submit" class="btn btn-primary" style="margin-bottom: 0">重新搜索</button>
+                                <button type="submit" class="btn btn-primary">重新搜索</button>
                             </div>
                         </div>
                     </form>

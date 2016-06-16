@@ -1,13 +1,12 @@
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.FSDirectory;
-import com.ng.util.analyzer.IKAnalyzer5x;
 import org.apache.lucene.util.QueryBuilder;
 import org.lionsoul.jcseg.analyzer.v5x.JcsegAnalyzer5X;
 import org.lionsoul.jcseg.tokenizer.core.JcsegTaskConfig;
