@@ -87,17 +87,19 @@ public class MySearcher {
     }
 
     public Query buildQuery(String queryString) {
-        QueryBuilder builder = new QueryBuilder(analyzer);
-        Query query4 = builder.createMinShouldMatchQuery("contentField", queryString, 1f);
-        Query query1 = builder.createMinShouldMatchQuery("titleField", queryString, 1f);
-        Query query2 = builder.createMinShouldMatchQuery("h1Field", queryString, 1f);
-        Query query3 = builder.createMinShouldMatchQuery("h2Field", queryString, 1f);
-        Query q1 = new BoostQuery(query1, 6f);
-        Query q2 = new BoostQuery(query2, 3f);
-        Query q3 = new BoostQuery(query3, 1.5f);
-        Query q4 = new BoostQuery(query4, 1f);
-        Query q = new BooleanQuery.Builder().add(q1, BooleanClause.Occur.SHOULD).add(q2, BooleanClause.Occur.SHOULD)
-                .add(q3, BooleanClause.Occur.SHOULD).add(q4, BooleanClause.Occur.SHOULD).build();
+//        QueryBuilder builder = new QueryBuilder(analyzer);
+//        Query query4 = builder.createMinShouldMatchQuery("contentField", queryString, 1f);
+//        Query query1 = builder.createMinShouldMatchQuery("titleField", queryString, 1f);
+//        Query query2 = builder.createMinShouldMatchQuery("h1Field", queryString, 1f);
+//        Query query3 = builder.createMinShouldMatchQuery("h2Field", queryString, 1f);
+//        Query q1 = new BoostQuery(query1, 6f);
+//        Query q2 = new BoostQuery(query2, 3f);
+//        Query q3 = new BoostQuery(query3, 1.5f);
+//        Query q4 = new BoostQuery(query4, 1f);
+//        Query q = new BooleanQuery.Builder().add(q1, BooleanClause.Occur.SHOULD).add(q2, BooleanClause.Occur.SHOULD)
+//                .add(q3, BooleanClause.Occur.SHOULD).add(q4, BooleanClause.Occur.SHOULD).build();
+//        Query q = new WildcardQuery(new Term("urlField", "*c?.tsinghua.edu.cn*"));
+        Query q = new FuzzyQuery(new Term("titleField", "机算机系"));
         return q;
     }
 
@@ -134,7 +136,7 @@ public class MySearcher {
         mySearcher.getId2PageRank();
 //        System.out.println("avgLength = " + mySearcher.getAvgLength());
 
-        ScoreDoc[] hits = mySearcher.search("计算机系 甲级团支部", 20);
+        ScoreDoc[] hits = mySearcher.search("computer science", 20);
         for (ScoreDoc hit : hits) {
             Document doc = mySearcher.getDoc(hit.doc);
             int id = Integer.parseInt(doc.get("idField"));
