@@ -8,6 +8,8 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.FSDirectory;
 import com.ng.util.analyzer.IKAnalyzer5x;
+import org.lionsoul.jcseg.analyzer.v5x.JcsegAnalyzer5X;
+import org.lionsoul.jcseg.tokenizer.core.JcsegTaskConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +28,8 @@ public class MySearcher {
 
     public MySearcher(String indexDir) {
         id2pageRank = new HashMap<>();
-        analyzer = new IKAnalyzer5x();
+//        analyzer = new IKAnalyzer5x();
+        analyzer = new JcsegAnalyzer5X(JcsegTaskConfig.COMPLEX_MODE);
         try {
             reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexDir)));
             searcher = new IndexSearcher(reader);
@@ -85,13 +88,21 @@ public class MySearcher {
     public ScoreDoc[] search(String queryString, int maxNum) {
         HashMap<String,Float> boosts = new HashMap<String,Float>();
         boosts.put("contentField", 1f);
-        boosts.put("titleField", 20f);
-        MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[]{"contentField", "titleField"}, analyzer, boosts);
+        boosts.put("titleField", 2f);
+        boosts.put("h1Field", 4f);
+        boosts.put("h2Field", 2f);
+        MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[]{"contentField", "titleField", "h1Field", "h2Field"}, analyzer, boosts);
         try {
             Query query = parser.parse(queryString);
-            System.out.println(searcher.explain(query, 1325).toHtml());
+//            BooleanQuery booleanQuery = new BooleanQuery();
+//            Query query1 = new TermQuery(new Term("typeField", "DOC"));
+//            booleanQuery.add(query1, BooleanClause.Occur.MUST);
+//            booleanQuery.add(query, BooleanClause.Occur.SHOULD);
+//            Query query1 = new TermQuery(new Term("urlField", "www.tsinghua.edu.cn/publish/newthu/index.html"));
+//            System.out.println(getDoc(947).get("urlField"));
+//            System.out.println(searcher.explain(query, 2967).toHtml());
             return searcher.search(query, maxNum).scoreDocs;
-        } catch (ParseException | IOException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
         return null;
@@ -107,7 +118,7 @@ public class MySearcher {
     }
 
     public static void main(String[] args) {
-        MySearcher mySearcher = new MySearcher("index");
+        MySearcher mySearcher = new MySearcher("index-new-analyzer");
         mySearcher.getId2PageRank();
 //        System.out.println("avgLength = " + mySearcher.getAvgLength());
 
@@ -115,6 +126,7 @@ public class MySearcher {
         for (ScoreDoc hit : hits) {
             Document doc = mySearcher.getDoc(hit.doc);
             int id = Integer.parseInt(doc.get("idField"));
+//            System.out.println(id);
             System.out.println("doc id = " + hit.doc + "\t\ttitle = " + doc.get("titleField") + "\t\tscore = " + hit.score + "\t\tpr = " + mySearcher.id2pageRank.get(id) + "\t\turl = " + doc.get("urlField"));
         }
     }
