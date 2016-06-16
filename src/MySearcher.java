@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -84,27 +86,97 @@ public class MySearcher {
         }
     }
 
-    public Query buildQuery(String queryString) {
-        QueryBuilder builder = new QueryBuilder(analyzer);
-        Query query4 = builder.createMinShouldMatchQuery("contentField", queryString, 1f);
-        Query query1 = builder.createMinShouldMatchQuery("titleField", queryString, 1f);
-        Query query2 = builder.createMinShouldMatchQuery("h1Field", queryString, 1f);
-        Query query3 = builder.createMinShouldMatchQuery("h2Field", queryString, 1f);
-        Query q1 = new BoostQuery(query1, 6f);
-        Query q2 = new BoostQuery(query2, 3f);
-        Query q3 = new BoostQuery(query3, 1.5f);
-        Query q4 = new BoostQuery(query4, 1f);
-        Query q = new BooleanQuery.Builder().add(q1, BooleanClause.Occur.SHOULD).add(q2, BooleanClause.Occur.SHOULD)
-                .add(q3, BooleanClause.Occur.SHOULD).add(q4, BooleanClause.Occur.SHOULD).build();
-//        Query q = new WildcardQuery(new Term("urlField", "*c?.tsinghua.edu.cn*"));
-//        Query q = new FuzzyQuery(new Term("titleField", "机算机系"));
-        return q;
+    private Query buildQuery(String queryString) {
+        return buildQuery(queryString, "", false, false);
     }
 
-    public ScoreDoc[] searchComplex(String stringMust, String stringShould, String stringNo, int maxNum) {
+
+    private Query buildQuery(String queryString, String searchField, boolean useWildCard, boolean useFuzzy) {
+        // Search Field = "" for all or "title" for title only or "h1" for h1 only
+        QueryBuilder builder = new QueryBuilder(analyzer);
+        if(Objects.equals(searchField, "title")) {
+            return builder.createMinShouldMatchQuery("titleField", queryString, 1f);
+        } else if(Objects.equals(searchField, "h1")) {
+            return builder.createMinShouldMatchQuery("h1Field", queryString, 1f);
+        } else {
+            Query query1, query2, query3, query4;
+            if(useWildCard) {
+                query1 = new WildcardQuery(new Term("titleField", queryString));
+                query2 = new WildcardQuery(new Term("h1Field", queryString));
+                query3 = new WildcardQuery(new Term("h2Field", queryString));
+                query4 = new WildcardQuery(new Term("contentField", queryString));
+            } else if(useFuzzy) {
+                query1 = new FuzzyQuery(new Term("titleField", queryString));
+                query2 = new FuzzyQuery(new Term("h1Field", queryString));
+                query3 = new FuzzyQuery(new Term("h2Field", queryString));
+                query4 = new FuzzyQuery(new Term("contentField", queryString));
+            } else {
+                query4 = builder.createMinShouldMatchQuery("contentField", queryString, 1f);
+                query1 = builder.createMinShouldMatchQuery("titleField", queryString, 1f);
+                query2 = builder.createMinShouldMatchQuery("h1Field", queryString, 1f);
+                query3 = builder.createMinShouldMatchQuery("h2Field", queryString, 1f);
+            }
+            Query q1 = new BoostQuery(query1, 6f);
+            Query q2 = new BoostQuery(query2, 3f);
+            Query q3 = new BoostQuery(query3, 1.5f);
+            Query q4 = new BoostQuery(query4, 1f);
+            return new BooleanQuery.Builder().add(q1, BooleanClause.Occur.SHOULD).add(q2, BooleanClause.Occur.SHOULD)
+                    .add(q3, BooleanClause.Occur.SHOULD).add(q4, BooleanClause.Occur.SHOULD).build();
+        }
+    }
+
+    public ScoreDoc[] searchWildCardOrFuzzy(String queryString , boolean useWildCard, int maxNum) {
+        queryString = queryString.toLowerCase(Locale.ENGLISH);
+        BooleanQuery.Builder builder = new BooleanQuery.Builder();
+        String[] strings = queryString.split(" ");
+        for (String string : strings) {
+            if(Objects.equals(string, ""))
+                continue;
+            builder.add(buildQuery(string, "", useWildCard, !useWildCard), BooleanClause.Occur.MUST);
+        }
+        try {
+            return searcher.search(builder.build(), maxNum).scoreDocs;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public ScoreDoc[] searchComplex(String stringMust, String stringShould, String stringNo, String stringSite, String fileType, String searchField, int maxNum) {
         String[] stringsMust = stringMust.split(" ");
         String[] stringsShould = stringShould.split(" ");
         String[] stringsNo = stringNo.split(" ");
+        BooleanQuery.Builder builder = new BooleanQuery.Builder();
+        for(String string : stringsMust) {
+            if(Objects.equals(string, ""))
+                continue;
+            builder.add(buildQuery(string, searchField, false, false), BooleanClause.Occur.MUST);
+        }
+        for(String string : stringsShould) {
+            if(Objects.equals(string, ""))
+                continue;
+            builder.add(buildQuery(string, searchField, false, false), BooleanClause.Occur.SHOULD);
+        }
+        for(String string : stringsNo) {
+            if(Objects.equals(string, ""))
+                continue;
+            builder.add(buildQuery(string, searchField, false, false), BooleanClause.Occur.MUST_NOT);
+        }
+        if (!Objects.equals(stringSite, "")) {
+            Query query = new WildcardQuery(new Term("urlField", stringSite+"*"));
+            builder.add(query, BooleanClause.Occur.MUST);
+        }
+        if (!Objects.equals(fileType, "")) {
+            assert (Objects.equals(fileType, "PDF") || Objects.equals(fileType, "DOC") || Objects.equals(fileType, "DOCX"));
+            Query query = new TermQuery(new Term("typeField", fileType));
+            builder.add(query, BooleanClause.Occur.MUST);
+        }
+        try {
+            return searcher.search(builder.build(), maxNum).scoreDocs;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -141,7 +213,10 @@ public class MySearcher {
         mySearcher.getId2PageRank();
 //        System.out.println("avgLength = " + mySearcher.getAvgLength());
 
-        ScoreDoc[] hits = mySearcher.search("computer science", 20);
+        ScoreDoc[] hits = mySearcher.search("清华大学", 20);
+//        ScoreDoc[] hits = mySearcher.searchComplex("足球", "", "", "", "PDF", "title", 20);
+//        ScoreDoc[] hits = mySearcher.searchWildCardOrFuzzy("ts?nghua Unive?sity", true, 20);
+//        ScoreDoc[] hits = mySearcher.searchWildCardOrFuzzy("tssnghua Univewsity", false, 20);
         for (ScoreDoc hit : hits) {
             Document doc = mySearcher.getDoc(hit.doc);
             int id = Integer.parseInt(doc.get("idField"));
