@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Created by lzhengning on 6/16/16.
@@ -70,9 +71,15 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
         String[] types = new String[n];
 
         for (int i = 0; i < n; ++i) {
-            contents[i] = searcher.getHightlight(result.query, hits[i + perPage * page], "contentField");
             Document doc = searcher.getDoc(hits[i + perPage * page].doc);
+            contents[i] = searcher.getHightlight(result.query, hits[i + perPage * page], "contentField");
+            if(Objects.equals(contents[i], "")) {
+                contents[i] = doc.get("contentField");
+            }
             titles[i] = searcher.getHightlight(result.query, hits[i + perPage * page], "titleField");
+            if(Objects.equals(titles[i], "")) {
+                titles[i] = doc.get("titleField");
+            }
             types[i] = doc.get("typeField");
             urls[i] = doc.get("urlField");
         }
