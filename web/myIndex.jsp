@@ -36,6 +36,7 @@
                         <form action="result" method="get">
                             <div class="input-group">
                                 <input type="text" class="form-control input-lg" name="query" placeholder="Search for ...">
+                                <input type="text" name="page" value="0" style="display: none;">
                                 <span class="input-group-btn">
                                     <button class="btn btn-lg btn-default" type="submit"><i class="fa fa-search"></i></button>
                                 </span>
