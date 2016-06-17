@@ -27,7 +27,6 @@
     <body>
         <div class="site-wrapper">
             <div class="site-wrapper-inner">
-                <div class="top-header"></div>
                 <div class="site-container">
                     <div class="logo-index">
                         <img src="/image/logo.png">

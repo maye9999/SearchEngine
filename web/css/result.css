@@ -4,8 +4,10 @@
     width: 666px;
 }
 
-.search-result-entry >mark{
-    
+.search-result-entry mark{
+    color: #c00;
+    background-color: transparent;
+    padding: inherit;
 }
 
 .search-result-entry:hover {

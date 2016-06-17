@@ -64,24 +64,6 @@ public class MySearcher {
             e.printStackTrace();
             return 0;
         }
-//        byte[] normArray;
-//        try {
-//            normArray = reader.norms("contentField");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return 0;
-//        }
-//        double sum = 0;
-//        for(int i = 0; i < reader.numDocs(); ++i) {
-//            Document document = reader.document(i);
-//            sum += document.get("contentField").length();
-//        }
-//
-//        for(int i = 0; i < normArray.length; ++i) {
-//            double l = DefaultSimilarity.decodeNorm(normArray[i]);
-//            l = 1.0 / (l * l);
-//            sum += l;
-//        }
         return (float)sum / reader.numDocs();
     }
 
@@ -200,17 +182,8 @@ public class MySearcher {
     }
 
     public SearchResult search(String queryString, int maxNum) {
-//        MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[]{"contentField", "titleField", "h1Field", "h2Field"}, analyzer, boosts);
-
         try {
             Query query = buildQuery(queryString);
-//            BooleanQuery booleanQuery = new BooleanQuery();
-//            Query query1 = new TermQuery(new Term("typeField", "DOC"));
-//            booleanQuery.add(query1, BooleanClause.Occur.MUST);
-//            booleanQuery.add(query, BooleanClause.Occur.SHOULD);
-//            Query query1 = new TermQuery(new Term("urlField", "www.tsinghua.edu.cn/publish/newthu/index.html"));
-//            System.out.println(getDoc(947).get("urlField"));
-//            System.out.println(searcher.explain(query, 30418).toHtml());
             return new SearchResult(searcher.search(query, maxNum).scoreDocs, query);
         } catch (IOException e) {
             e.printStackTrace();
