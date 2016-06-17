@@ -199,18 +199,31 @@
                                 if (!types[i].equals("HTML")) {
                                     out.print("[" + types[i] + "]");
                                 }
-                                out.println(titles[i]);
+                                if (titles[i].length() < 75) {
+                                    out.println(titles[i]);
+                                } else {
+                                    out.println(titles[i].substring(0, 75) + "...");
+                                }
                             %>
                         </a>
                     </div>
                     <div class="entry-url text-success">
-                        <%= urls[i] %>
+                        <%
+                            if (urls[i].length() < 100) {
+                                out.println(urls[i]);
+                            } else {
+                                out.println(urls[i].substring(0, 100) + "...");
+                            }
+                        %>
                     </div>
                     <div class="entry-content">
                         <%= contents[i] %>
                     </div>
                 </div>
                 <div class="divider"></div>
+                <% } %>
+                <% if (titles.length == 0) { %>
+                    <h3 class="text-warning"> 没有找到搜索结果 </h3>
                 <% } %>
             </div>
         </div>

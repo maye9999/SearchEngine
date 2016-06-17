@@ -54,12 +54,16 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
         }
 
         ScoreDoc[] hits = result.scoreDocs;
-        String[] titles = new String[perPage];
-        String[] contents = new String[perPage];
-        String[] urls = new String[perPage];
-        String[] types = new String[perPage];
+        int n = hits.length - perPage * page;
+        if (n > perPage) {
+            n = perPage;
+        }
+        String[] titles = new String[n];
+        String[] contents = new String[n];
+        String[] urls = new String[n];
+        String[] types = new String[n];
 
-        for (int i = 0; i < perPage; ++i) {
+        for (int i = 0; i < n; ++i) {
             contents[i] = searcher.getHightlight(result.query, hits[i + perPage * page], "contentField");
             Document doc = searcher.getDoc(hits[i + perPage * page].doc);
             titles[i] = doc.get("titleField");
