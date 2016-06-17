@@ -286,7 +286,7 @@ public class MyIndexer {
     }
 
     public static void main(String[] args) {
-        MyIndexer myIndexer = new MyIndexer("index-new-analyzer");
+        MyIndexer myIndexer = new MyIndexer("index-new");
         myIndexer.getId2Url(new File("E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\preprocess\\id2url.txt"));
         myIndexer.getId2PageRank(new File("E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\preprocess\\page_rank.txt"));
         myIndexer.getId2Headers(new File("E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\preprocess\\h1.txt"),
