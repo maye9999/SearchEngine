@@ -14,7 +14,8 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
     int maxNum = 1000;
     int perPage = 10;
 
-    final String indexPosition = "/Users/lzhengning/Desktop/index-new-analyzer";
+//    final String indexPosition = "/Users/lzhengning/Desktop/index-new-analyzer";
+    final String indexPosition = "E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\project\\SearchEngine\\index-new";
 
     @Override
     public void init() throws ServletException {
@@ -24,7 +25,12 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int page = Integer.parseInt(request.getParameter("page"));
+        int page = 0;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+        } catch (Exception e) {
+            page = 0;
+        }
         int mode = 0;
         if (request.getParameter("mode") != null) {
             mode = Integer.parseInt(request.getParameter("mode"));
@@ -66,12 +72,13 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
         for (int i = 0; i < n; ++i) {
             contents[i] = searcher.getHightlight(result.query, hits[i + perPage * page], "contentField");
             Document doc = searcher.getDoc(hits[i + perPage * page].doc);
-            titles[i] = doc.get("titleField");
+            titles[i] = searcher.getHightlight(result.query, hits[i + perPage * page], "titleField");
             types[i] = doc.get("typeField");
             urls[i] = doc.get("urlField");
         }
 
         request.setAttribute("page", page);
+        request.setAttribute("totalPage", (hits.length-1) / perPage + 1);
         request.setAttribute("mode", mode);
         request.setAttribute("currentQuery", request.getParameter("query"));
         request.setAttribute("titles", titles);
