@@ -25,16 +25,22 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
         if (request.getParameter("mode") != null) {
             mode = Integer.parseInt(request.getParameter("mode"));
         }
-        ScoreDoc[] hits = searcher.search(request.getParameter("query"), 10);
-        Document[] docs = new Document[hits.length];
+        MySearcher.SearchResult result = searcher.search(request.getParameter("query"), 10);
+        ScoreDoc[] hits = result.scoreDocs;
+        String[] titles = new String[hits.length];
+        String[] contents = new String[hits.length];
+        String[] urls = new String[hits.length];
         System.out.println("hits number = " + hits.length);
         for (int i = 0; i < hits.length; ++i) {
-            docs[i] = searcher.getDoc(hits[i].doc);
-            System.out.println("title : " + docs[i].get("titleField"));
+            titles[i] = searcher.getHightlight(result.query, hits[i], "titleField");
+            contents[i] = searcher.getHightlight(result.query, hits[i], "contentField");
+            urls[i] = searcher.getHightlight(result.query, hits[i], "urlField");
         }
         request.setAttribute("mode", mode);
         request.setAttribute("currentQuery", request.getParameter("query"));
-        request.setAttribute("docs", docs);
+        request.setAttribute("titles", titles);
+        request.setAttribute("contents", contents);
+        request.setAttribute("urls", urls);
         request.getRequestDispatcher("myResult.jsp").forward(request, response);
     }
 
@@ -53,7 +59,8 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
 
         System.out.println("stringMust : " + stringMust);
         System.out.println("fileType : " + fileType);
-        ScoreDoc[] hits = searcher.searchComplex(stringMust, stringShould, stringNo, stringSite, fileType, searchField, 10);
+        MySearcher.SearchResult result = searcher.searchComplex(stringMust, stringShould, stringNo, stringSite, fileType, searchField, 10);
+        ScoreDoc[] hits = result.scoreDocs;
 
         Document[] docs = new Document[hits.length];
         System.out.println("hits number = " + hits.length);
@@ -63,6 +70,8 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
         request.setAttribute("mode", mode);
         request.setAttribute("currentQuery", "");
         request.setAttribute("docs", docs);
+        request.setAttribute("searcher", searcher);
+        request.setAttribute("query", result.query);
         request.getRequestDispatcher("myResult.jsp").forward(request, response);
     }
 }

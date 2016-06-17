@@ -1,7 +1,8 @@
 <%@ page import="org.apache.lucene.search.ScoreDoc" %>
 <%@ page import="org.apache.lucene.document.Document" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="javax.print.Doc" %><%--
+<%@ page import="javax.print.Doc" %>
+<%@ page import="org.apache.lucene.search.Query" %><%--
   Created by IntelliJ IDEA.
   User: lzhengning
   Date: 6/16/16
@@ -133,27 +134,22 @@
 
             <div>
                 <%
-                    Document[] docs = (Document []) request.getAttribute("docs");
-                    for (Document doc : docs) {
+                    String[] titles = (String []) request.getAttribute("titles");
+                    String[] contents = (String []) request.getAttribute("contents");
+                    String[] urls = (String []) request.getAttribute("urls");
+                    for (int i = 0; i < titles.length; ++i) {
                 %>
                 <div class="search-result-entry">
                     <div class="entry-name lead text-info">
-                        <a href="<%= "http://" + doc.get("urlField") %>">
-                            <%= doc.get("titleField") %>
+                        <a href="<%= "http://" + urls[i] %>">
+                            <%= titles[i] %>
                         </a>
                     </div>
                     <div class="entry-url text-success">
-                        <%= doc.get("urlField") %>
+                        <%= urls[i] %>
                     </div>
                     <div class="entry-content">
-                        <%
-                            String content = doc.get("contentField");
-                            if (content.length() > 100) {
-                                out.println(content.substring(0, 100) + "...");
-                            } else {
-                                out.println(content);
-                            }
-                        %>
+                        <%= contents[i] %>
                     </div>
                 </div>
                 <div class="divider"></div>
