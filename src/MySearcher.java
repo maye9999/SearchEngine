@@ -114,8 +114,10 @@ public class MySearcher {
             Query q2 = new BoostQuery(query2, 3f);
             Query q3 = new BoostQuery(query3, 1.5f);
             Query q4 = new BoostQuery(query4, 1f);
+
             return new BooleanQuery.Builder().add(q1, BooleanClause.Occur.SHOULD).add(q2, BooleanClause.Occur.SHOULD)
                     .add(q3, BooleanClause.Occur.SHOULD).add(q4, BooleanClause.Occur.SHOULD).build();
+
         }
     }
 
@@ -156,7 +158,11 @@ public class MySearcher {
         for(String string : stringsNo) {
             if(Objects.equals(string, ""))
                 continue;
-            builder.add(buildQuery(string, searchField, false, false), BooleanClause.Occur.MUST_NOT);
+            QueryBuilder builder2 = new QueryBuilder(analyzer);
+            builder.add(builder2.createBooleanQuery("contentField", string), BooleanClause.Occur.MUST_NOT);
+            builder.add(builder2.createBooleanQuery("h1Field", string), BooleanClause.Occur.MUST_NOT);
+            builder.add(builder2.createBooleanQuery("h2Field", string), BooleanClause.Occur.MUST_NOT);
+            builder.add(builder2.createBooleanQuery("titleField", string), BooleanClause.Occur.MUST_NOT);
         }
         if (!Objects.equals(stringSite, "")) {
             Query query = new WildcardQuery(new Term("urlField", stringSite+"*"));
@@ -222,11 +228,11 @@ public class MySearcher {
 //        System.out.println("avgLength = " + mySearcher.getAvgLength());
 
 
-        SearchResult result = mySearcher.search("清华大学计算机系", 20);
+        SearchResult result = mySearcher.searchComplex("清华大学", "", "法学院", "", "", "", 20);
 
         ScoreDoc[] hits = result.scoreDocs;
-        String hightlight = mySearcher.getHightlight(result.query, hits[1], "contentField");
-        System.out.println(hightlight);
+//        String hightlight = mySearcher.getHightlight(result.query, hits[1], "contentField");
+//        System.out.println(hightlight);
 //        ScoreDoc[] hits = mySearcher.searchComplex("足球", "", "", "", "PDF", "title", 20);
 //        ScoreDoc[] hits = mySearcher.searchWildCardOrFuzzy("ts?nghua Unive?sity", true, 20);
 //        ScoreDoc[] hits = mySearcher.searchWildCardOrFuzzy("tssnghua Univewsity", false, 20);
