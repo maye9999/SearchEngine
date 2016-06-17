@@ -214,7 +214,7 @@ public class MySearcher {
     }
 
     public String getHightlight(Query query, ScoreDoc scoreDoc, String field) {
-        SimpleHTMLFormatter htmlFormatter = new SimpleHTMLFormatter();
+        SimpleHTMLFormatter htmlFormatter = new SimpleHTMLFormatter("<mark>", "</mark>");
         Highlighter highlighter = new Highlighter(htmlFormatter, new QueryScorer(query));
         int id = scoreDoc.doc;
         Document doc = getDoc(id);
@@ -222,7 +222,7 @@ public class MySearcher {
         TokenStream tokenStream = null;
         try {
             tokenStream = TokenSources.getAnyTokenStream(reader, id, field, analyzer);
-            return highlighter.getBestFragments(tokenStream, txt, 3, "...");
+            return highlighter.getBestFragments(tokenStream, txt, 2, "...");
         } catch (IOException | InvalidTokenOffsetsException e) {
             e.printStackTrace();
             return null;
