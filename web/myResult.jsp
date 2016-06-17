@@ -43,15 +43,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">ThuGo</a>
+                <a class="navbar-brand" href="/search">ThuGo</a>
             </div>
 
             <div class="navbar-collapse collapse" id="navbar-collapsible">
-                <form class="navbar-form">
+                <form class="navbar-form" action="result" method="get">
                     <div class="form-group">
                         <div class="input-group">
-                            <input type="text" class="form-control" value='<%= request.getAttribute("currentQuery")%>'>
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                            <input type="text" class="form-control" name="query" value='<%= request.getAttribute("currentQuery")%>'>
+                            <span class="input-group-btn"><button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button></span>
                         </div>
                     </div>
                 </form>
