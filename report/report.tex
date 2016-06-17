@@ -1,0 +1,343 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt, UTF8]{article} % A4 paper and 11pt font size
+\usepackage[a4paper,left=3.18cm,right=3.18cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{ctex}
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{graphicx}
+%\usepackage{rotating} % for sidewaysfigure
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+% Uncomment below to New page befor section
+%\usepackage{titlesec}
+%\newcommand{\sectionbreak}{\clearpage}
+%\titleformat*{\section}{\centering \Large \bfseries}
+
+\newcommand{\matr}[1]{\mathbf{#1}} % undergraduate algebra version
+%\usepackage{sectsty} % Allows customizing section commands
+%\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead[L]{}
+\fancyhead[C]{}
+\fancyhead[R]{\thepage} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{\thepage} % Empty center footer
+\fancyfoot[R]{} % Page numbering for right footer
+%\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+%\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+\lstset{language=Python,%
+    %basicstyle=\color{red},
+    keywordstyle=\color{blue},%
+    extendedchars=false,
+    breaklines,
+    identifierstyle=\color{black},%
+    stringstyle=\color{red},
+    commentstyle=\color{green},%
+    frame=single,
+    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+    numbers=left,%
+    numberstyle={\small \color{black}},% size of the numbers
+    numbersep=9pt, % this defines how far the numbers are from the text
+    emph=[1]{for,end,break},emphstyle=[1]\color{red}, %some words to emphasise
+    escapeinside=``
+}
+
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{
+\normalfont \normalsize
+\textsc{\kaishu 搜索引擎技术基础} \\ [5pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge 校园搜索引擎构建 \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{马\; \, 也 \quad 2013011365 计34 \\ 刘政宁 \quad 2013011362 计34}
+%\author{马也} % Your name
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+
+\maketitle % Print the title
+
+\thispagestyle{empty}
+\newpage
+
+\setcounter{page}{1}
+%\tableofcontents
+\fontsize{10pt}{15pt}\selectfont
+%\newpage
+
+\section{实验要求和内容}
+
+本项目要求综合运用搜索引擎体系结构和核心算法方面的知识，基于开源资源搭建校园搜索引擎，掌握开源搜索引擎的运行流程。具体要求为：
+
+\begin{enumerate}
+\item 抓取清华校内绝大部分（30万左右）网页资源及大部分在线文本资源（如office文档、pdf文档等）
+\item 实现基于BM25概率模型的内容排序算法，要求对查询进行分词；
+\item 实现基于HTML结构的分域权重计算（content/title/h1-h6），并应用到搜索结果排序之中，并建立小规模测试集合，进行参数调节；
+\item 实现基于Page Rank的连接结构分析功能，离线计算Page Rank值，并应用到搜索结果排序之中；
+\item 采用便于用户信息交互的Web界面，实现查询扩展、查询纠错等功能。
+\end{enumerate}
+
+
+\section{实验功能}
+
+本项目在全部完成基础要求的同时，最终完成如下扩展功能，具体功能描述及效果参见实验成果一节。
+
+\begin{itemize}
+\item 基于HTML结构的分域权重计算（包含content/title/h1-h6等），不同域权值不同
+\item 实现了条件查询功能，即支持不同查询语句的AND、OR、NOT组合
+\item 实现了模糊查询功能，即支持自动纠正错误输入，并得到正确查询结果
+\item 实现了通配符查询（正则表达式）功能，即支持* ? \^  等通配符进行查询
+\item 实现了查询特定范围功能，即支持查询某一网域下的相关网页
+\item 实现了查询特定类型功能，即支持查询某一或某几类型的资源
+\item 实现了查询结果界面的高亮处理，即找到最佳高亮位置，显示到摘要之中
+\item 实现了对特定HTML结构的查询，即支持仅在标题、h1等结构中查询
+\end{itemize}
+
+\section{实验框架及运行环境}
+
+\subsection{框架概要}
+
+\begin{figure}[htp]
+\center
+\includegraphics[width=\textwidth]{arch}
+\caption{实验框架} \label{relation}
+\end{figure}
+
+本项目主要分为五个模块：爬取模块、预处理模块、索引模块、查询解析模块以及Web模块。主要流程关系参见图\ref{relation}，具体阐述如下：
+
+\textbf{爬取模块}从清华校内爬取网页和文本数据，并按照网页结构（url）分文件夹存放在本地，对应搜索引擎中的数据抓取子系统；
+
+\textbf{预处理模块}分析和处理爬虫爬取到的数据，筛选高质量网页，提取网页HTMl结构到纯文本文件之中，交由索引模块使用，并分析网页链接结构，计算Page Rank值，其对应搜索引擎中的链接分析子系统和内容索引子系统的一部分；
+
+\textbf{索引模块}则利用预处理模块提取好的文本文件，使用分词器构建多层次索引，存储各层结构的文本信息到索引数据库中，以备查询模块使用，其对应搜索引擎中的内容索引子系统；
+
+\textbf{查询解析}模块利用建立好的索引，根据查询条件和要求构建相应的查询语句，分拆高级查询语句为基本查询语句的组合，并在索引数据库中进行查询，返回查询到的文档列表，其对应内容检索子系统；
+
+\textbf{Web模块}代表了搜索引擎所对应的网站，其负责接收用户请求，发送给查询解析模块，收到结果后以合理的格式与结构返回给用户。
+
+\subsection{爬取模块}
+
+爬取模块使用第三方库Heritrix 3.2.0完成，Heritrix可以对抓取的对象进行精确的控制，很好地符合我们校园搜索的要求。需要指出的是，最早项目使用课件上使用的版本，但其爬取速度太慢，且正则表达式过滤模块有隐含的BUG，所以最终替换为更新的版本，因此配置和课件上的配置有所不同。主要配置了如下内容：
+
+\begin{itemize}
+\item 种子资源：http://news.tsinghua.edu.cn/
+\item 接受网页总规则：以tsinghua.edu.cn结尾，且不以lib.tsinghua.edu.cn结尾，不属于166.111.120网段
+\item 拒绝类型规则：js|JS|axd|AXD|mso|tar|txt|asx|asf|bz2|mpe?g|MPE?G|tiff?|gif等，从略
+\end{itemize}
+
+除此之外，还设置了爬取速度，最大条数等具体配置，最终爬取了40万以上的文件，删除掉其中大于32M的较大文件，最终剩余35万左右。
+
+\subsection{预处理模块}
+
+预处理模块基本使用Python 3 完成，计算Page Rank使用C++完成，代码在preprocess文件夹内，脚本文件及对应功能如下：
+
+\begin{itemize}
+\item \textbf{parse\_log.py}：分析Heritrix日志，建立文件名到网页URL的双向映射关系
+\item \textbf{get\_id.py}：分析链接结构，筛选有效网页，给每个网页分配独立id，并得到链接图谱
+\item \textbf{append\_id.py}：对get\_id的补充
+\item \textbf{prepare\_pr.py}：将Python结构按照规则写入文件，为C++程序准备输入
+\item \textbf{page\_rank.cc}：计算Page Rank，写入文件中，每行一个id和对应的Page Rank
+\item \textbf{get\_text.py}：提取网页文本内容，删除script、css以及HTML标记，每个网页存入一个文本文件中，文件名为网页id
+\item \textbf{get\_title.py}：提取网页标题（<title>域），写入文件中，每行一个id和对应的title
+\item \textbf{get\_file\_text.py}：提取PDF、DOC、DOCX等格式的全部文本，每个文件存入一个文本文件中
+\item \textbf{get\_file\_title.py}：提取PDF文件的标题，写入文件中，每行一个id和对应的title
+\item \textbf{ get\_docs\_title.py}：提取WORD文件的标题，写入文件中，每行一个id和对应的title
+\item \textbf{get\_h1.py}：提取网页结构，（h1-h6），分别写入文件中
+\end{itemize}
+
+需要注意的是，由于Heritrix在抓取带GET请求的网页时，存储文件的文件名和网址URL并不能一一对应（其去掉了问号，挪动了文件类型的位置），且单从文件名并不能找到对应的URL，所以第一步分析Heritrix爬取日志是必要且是必须的。通过分析日志，得到了URL到文件名的双向映射，同时删除了404网页，将网页个数减少到32万左右。
+
+以上处理中对于HTML网页的处理使用Beautiful Soup完成，其负责提取链接关系，提取文本信息，提取title和提取h1-h6域等，部分编码混乱的网页被直接丢弃，将网页个数再减到30万左右。
+
+另外，由于绝大多数下载附件网页的文件名都是数字编号或无意义符号，所以提取PDF和DOC文件的标题也是十分重要的。提取PDF内容使用了pdftotext程序，提取PDF标题使用了pyPdf库，通过PDF文件的Meta信息能够得到大部分PDF的准确文件名，提取DOC文件使用了antiword程序，提取DOCX文件使用了docx库。
+
+\subsection{索引模块}
+
+索引模块使用Lucene 5.5完成（MyIndexer.java），主要存储了网页id、网页标题、网页内容（content/h1-h6等）、网页类型（HTML/WORD/PDF等）、网页Page Rank值到索引之中，其中网页标题、内容进行了分词处理，分词时使用了效果更好的jcseg第三方库，可以有效地区分数字、人名、专有名词等，分词准确率更高。
+
+索引时使用的评分模块为BM25模型的改版（MySimilarity.java），BM25模型在Lucene 5.5官方提供的BM25Similarity的基础上进行了重构，加入了Page Rank的计算，修改了最终得分公式，将BM25的得分与Page Rank的0.5次方乘起来得到最终得分，最终评分公式为：
+
+$$
+\mathrm{Score} =  \mathrm{idf} \cdot \dfrac{(k + 1) \cdot \mathrm{freq}}{k \cdot (1 - b + b \cdot \frac{|d|}{\mathrm{avgLen}}) + \mathrm{freq}} \cdot \sqrt{\mathrm{PageRank}}
+$$
+
+这里使用根号的原因是减少Page Rank对于结果的影响，因为Page Rank范围变化较大（$10^{-{3}}$ 到 $10^{-{7}}$），如果直接将BM25结果和Page Rank结果相乘，会导致Page Rank高的网页，即使只出现一次也会排名非常靠前，这就让BM25算法失去了意义。
+
+\subsection{查询解析模块}
+
+查询解析模块使用Lucene 5.5完成（MySearcher.java），主要实现了普通搜索（search()）、获得文本高亮（getHighlight()）、高级搜索（searchComplex()）、通配符和模糊搜索（searchFuzzy OrWildCard()）等功能。
+
+需要注意的是，如果直接使用QueryParser，其生成的Query语句的分词间是SHOULD的关系，即只要有一个出现即可，这不太符合大多数搜索的要求，如搜索“清华大学计算机系”时可能出现只含“清华大学”而不含“计算机系”的文档，所以要使用QueryBuilder类的createMinShouldMatch方法构建Query，这样保证分词后的每个词都必须出现，而不是出现一个即可。
+
+得到了基础的Query之后，需要根据要求再不同域上进行搜索（content、title、h1、type等），并且需要使用BoosQuery提供不同域的不同权值。如果进行条件搜索，则需要BooleanQuery对其进行组合，BooleanQuery中的SHOULD、MUST、MUST\_NOT分别对应OR、AND和NOT。
+
+对于通配符搜索和模糊搜索，则可以使用WildCardQuery和FuzzyQuery，按照类似的要求进行组合，得到最终的Query查询。
+
+文本高亮也是在这一模块实现的，主要使用Lucene中的Highlighter类，对于一个特定的Query、特定的field和和内容，可以找到最佳的文本段，其出现特定关键词的次数最多、得分最高，将其返回给前端，就可以实现类似于Baidu、Google等搜索引擎的文本高亮了。
+
+\subsection{Web模块}
+
+该模块使用Tomcat服务器完成（IndexServlet.java和ResultServlet.java），主要实现了myIndex.jsp和myResult.jsp两个动态页面，其负责显示搜索结果，进行分页处理等操作，并接受用户高级搜索的输入，转化为查询解析模块的函数调用。
+
+
+\section{实验成果与分析}
+
+\subsection{主要功能与效果图}
+
+\subsubsection{主界面}
+
+\begin{figure}[htp]
+\center
+\includegraphics[width=\textwidth]{ss1}
+\caption{主界面} \label{relation}
+\end{figure}
+
+\subsubsection{搜索结果}
+
+\subsubsection{搜索文件功能}
+
+\subsubsection{模糊搜索功能}
+
+\subsubsection{通配符搜索功能}
+
+\subsubsection{条件搜索功能}
+
+
+\subsection{实验结果分析}
+
+\subsubsection{入链接、出链接分布}
+
+首先，对抓取到的网页进行入链接、出链接统计，可以得到它们的分布情况，如下图所示：
+
+\begin{figure}[htp]
+\center
+\includegraphics[scale=0.5]{in_degree}
+\caption{入链接分布情况}
+\end{figure}
+
+\begin{figure}[htp]
+\center
+\includegraphics[scale=0.5]{out_degree}
+\caption{出链接分布情况}
+\end{figure}
+
+从中我们可以看出，对于入链接个数分布情况来说，较好的满足了幂律，即入度与出现次数满足指数函数关系；而对于出链接个数分布来看，其在低频区不能很好的满足幂率，但是依然有着相似的分布。
+
+\subsection{PageRank算法结果}
+
+使用编写的 compute\_page\_rank.py 程序，我们可以得到每个节点的Page Rank值。在计算中，我们取 $\alpha = 0.15$，$TN=30$，即经过30轮迭代之后，得到每个节点的Page Rank值，并将其和该节点的入度、出度信息一同写入文件 pr.out 之中。再使用 sort\_page\_rank.py 文件将节点按照Page Rank值倒序排列，并写入 pr\_sorted.out 文件之中。前20高的Page Rank结果如下：
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{@{}cccc@{}}
+\toprule
+名称      & 入度     & 出度   & Page Rank         \\ \midrule
+箭头      & 45     & 5    & 0.0222668083002   \\
+←       & 228676 & 2    & 0.0172861636988   \\
+维基数据    & 196429 & 14   & 0.00479873711217  \\
+Unicode & 945    & 170  & 0.00390513158781  \\
+符号      & 283    & 78   & 0.00383177128121  \\
+中国      & 68798  & 2287 & 0.00129366014872  \\
+美国      & 70222  & 1741 & 0.00115649146484  \\
+学名      & 68384  & 20   & 0.00108457397504  \\
+法国      & 54791  & 629  & 0.000979740902801 \\
+市镇      & 64201  & 10   & 0.000972031267654 \\
+脊索动物门   & 29175  & 3    & 0.000839896529738 \\
+日本      & 59325  & 1462 & 0.000818811527809 \\
+植物界     & 42764  & 0    & 0.0007500696361   \\
+台湾      & 47474  & 2657 & 0.000688429705995 \\
+自动维基浏览器 & 31466  & 0    & 0.000662878000729 \\
+中华人民共和国 & 33233  & 3905 & 0.000660764666385 \\
+英国      & 31105  & 660  & 0.000616594610762 \\
+香港      & 45962  & 2376 & 0.000581452559999 \\
+*       & 13990  & 3    & 0.00055635308354  \\
+市镇(法国)  & 30974  & 58   & 0.000544901652058 \\ \bottomrule
+\end{tabular}
+\caption{前20名Page Rank结果}\label{table1}
+\end{table}
+
+从结果中，我们发现，Page Rank最高的竟然是“箭头”这个网页，而第二高的是“←”这个符号。原因很简单，“←”这个符号共有20万的入度，却只有极少的出度，其中一个出度就是“箭头”这个网页。而“Unicode”和“符号”入度非常之低，但Page Rank之所以这么高，也是因为“箭头”有输出指向了“Unicode”和“符号”网页。而至于“中国”、“美国”、“学名”、“法国”等词条，就是因为他们的入度比较高，所以排名也比较靠前。
+
+总之，我们可以发现，Page Rank要比较靠前需要满足以下两个条件之一：有较大的入度（很多网站都链接到该网站）或者被某个非常重要的网站“赏识”（投票权重较大）。
+
+\subsection{PageRank结果分布情况}
+
+接着，我统计了Page Rank结果的分布情况，绘制如下图表：
+
+
+
+\newpage
+
+其中横轴为倒序排布后网站编号，纵轴为Page Rank值的以10为底的对数值。从图中我们可以发现，Page Rank值的衰减是非常非常快的，仅仅是前10\%的网站的Page Rank就已经从最高值0.02左右降低到$10^{-6}$，如果我们只画出前10000个和前1000个网站的Page Rank分布，就可以得到如下图表：
+
+
+由此可见Page Rank衰减的速度非常之快。
+
+\subsection{PageRank与入链接数的关联分析}
+
+从表\ref{table1}中我们就已经可以看出，随着Page Rank值的减少，入链接数并没有简简单单地随之减少，而是有较大差异。正如刚刚分析的那样，“Unicode”和“符号”入度很低，但是Page Rank值非常高，这是因为其由“箭头”这个Page Rank值很高的网页所指向而导致的。
+
+如果画出Page Rank和入链接数的散点图，我们可以得到如下结果：
+
+
+其中横轴是入链接数以10为底的对数坐标，纵轴是Page Rank以10为底的对数坐标。从图中我们可以发现，尽管二者并不是严格的正相关，但是随着入度的增加，Page Rank是有增加的趋势的。
+
+\subsection{PageRank得分与相应条目语义内容的分析}
+
+我们依次打开前几名对应的维基百科页面，可以看出“箭头”、 “←”、 “维基数据”、 “Unicode”、 “符号”这前5名的维基百科内容较为简单，即不应该认为其语义内容优秀。而“中国”、 “美国”、 “法国”、 “日本”等词条则内容较为丰富和优秀。这就说明了，Page Rank算法所反映出来的链接结构关系并不是评定一个网页好坏的唯一依据，我们依然要通过语义内容的角度进行分析，剔除一些Page Rank较高但却不合理的劣质网页。
+
+\section{实验总结}
+
+通过这次实验，我学习掌握了Page Rank算法的基本思想和其实现方法，并对其依据和动机有了深入的了解。另外，通过分析网站的链接结构关系，我也理解了链接结构中所说的幂率和Bow-tie结构。
+
+总之，通过亲身实践，我对搜索引擎中的链接结构子系统又有了更深的理解和体会。
+
+\end{document}
