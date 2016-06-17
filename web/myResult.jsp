@@ -60,12 +60,13 @@
 
     <div class="container">
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#search-all">所有</a></li>
-            <li><a data-toggle="tab" href="#search-web">网页</a></li>
-            <li><a data-toggle="tab" href="#search-document">文档</a></li>
-            <li><a data-toggle="tab" href="#fuzzy-search">模糊查询</a></li>
-            <li><a data-toggle="tab" href="#wildcard-search">通配符搜索</a></li>
-            <li><a data-toggle="collapse" href="#advanced-search">高级搜索</a></li>
+
+            <li><a id="search-all" class="search-option-tab">所有</a></li>
+            <li><a id="search-web" class="search-option-tab">网页</a></li>
+            <li><a id="search-doc" class="search-option-tab">文档</a></li>
+            <li><a id="fuzzy-search" class="search-option-tab">模糊查询</a></li>
+            <li><a id="wildcard-search" class="search-option-tab">通配符搜索</a></li>
+            <li><a data-toggle="collapse" data-target="#advanced-search" class="search-option-tab">高级搜索</a></li>
         </ul>
 
         <div class="tab-content search-result">
@@ -74,61 +75,63 @@
                     高级搜索选项
                 </div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form">
+                    <form id="advanced-search-form" class="form-horizontal" role="form" action="/result" method="post">
+                        <input type="text" name="mode" value="5" style="display: none;">
                         <div class="form-group">
                             <label class="control-label col-md-4">包含以下全部的关键词</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" id="all-keywords" placeholder="例如: 清华大学 计算机系">
+                                <input type="text" class="form-control" name="all-keywords" placeholder="例如: 清华大学 计算机系">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-4">包含以下任意一个关键词</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" id="any-keywords" placeholder="例如: 清华大学 计算机系">
+                                <input type="text" class="form-control" name="any-keywords" placeholder="例如: 清华大学 计算机系">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-4">不包含以下任意一个关键词</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" id="no-keywords" placeholder="例如: 心理系">
+                                <input type="text" class="form-control" name="no-keywords" placeholder="例如: 心理系">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-4">限定搜索指定的网站</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" id="in-site" placeholder="例如: cs.tsinghua.edu.cn">
+                                <input type="text" class="form-control" name="in-site" placeholder="例如: cs.tsinghua.edu.cn">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-4">搜索文档格式</label>
                             <div class="col-md-8">
-                                <select class="form-control" id="doc-type">
-                                    <option>所有网页文档</option>
-                                    <option>PDF</option>
-                                    <option>Word 文档</option>
+                                <select class="form-control" name="doc-type">
+                                    <option value="">所有网页文档</option>
+                                    <option value="PDF">PDF</option>
+                                    <option value="DOC">doc</option>
+                                    <option value="DOCX">docx</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-4">关键词位于</label>
                             <div class="col-md-8">
-                                <select class="form-control" id="keyword-pos">
-                                    <option>任何地方</option>
-                                    <option>仅出现在网站或者文档的标题中</option>
-                                    <option>进出现在 URL 中</option>
+                                <select class="form-control" name="keyword-pos">
+                                    <option value="">任何地方</option>
+                                    <option value="titleField">仅出现在网站或者文档的标题中</option>
+                                    <option value="urlField">仅出现在 URL 中</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group" style="margin-bottom: 0">
                             <div class="col-md-offset-10 col-md-2">
-                                <button type="submit" class="btn btn-primary">重新搜索</button>
+                                <button id="advanced-search-submmit" type="submit" class="btn btn-primary">重新搜索</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <div id="search-all" class="tab-pane fade in active">
+            <div>
                 <%
                     Document[] docs = (Document []) request.getAttribute("docs");
                     for (Document doc : docs) {
@@ -155,18 +158,6 @@
                 </div>
                 <div class="divider"></div>
                 <% } %>
-            </div>
-            <div id="search-web" class="tab-pane fade">
-
-            </div>
-            <div id="search-document" class="tab-pane fade">
-                
-            </div>
-            <div id="fuzzy-search" class="tab-pane fade">
-
-            </div>
-            <div id="wildcard-search" class="tab-pane fade">
-
             </div>
         </div>
 
@@ -197,5 +188,42 @@
 
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="/js/bootstrap.min.js"></script>
+
+    <script>
+        $(function () {
+            var query = '<%= request.getAttribute("currentQuery") %>';
+            $('#search-all').click(function () {
+                window.location.href = '/result?query=' + query + '&mode=0';
+            });
+            $('#search-web').click(function () {
+                window.location.href = '/result?query=' + query + '&mode=1';
+            });
+            $('#search-doc').click(function () {
+                window.location.href = '/result?query=' + query + '&mode=2';
+            });
+            $('#fuzzy-search').click(function () {
+                window.location.href = '/result?query=' + query + '&mode=3';
+            });
+            $('#wildcard-search').click(function () {
+                window.location.href = '/result?query=' + query + '&mode=4';
+            });
+            var mode = <%= request.getAttribute("mode") %>;
+            if (mode == 0) {
+                $('#search-all').parent().addClass('active');
+            } else if (mode == 1) {
+                $('#search-web').parent().addClass('active');
+            } else if (mode == 2) {
+                $('#search-doc').parent().addClass('active');
+            } else if (mode == 3) {
+                $('#fuzzy-search').parent().addClass('active');
+            } else if (mode == 4) {
+                $('#wildcard-search').parent().addClass('active');
+            }
+
+            $('#advanced-search-submmit').click(function () {
+                $('#advanced-search-form').submit();
+            })
+        })
+    </script>
 </body>
 </html>
