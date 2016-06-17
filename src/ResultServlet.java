@@ -72,14 +72,14 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
 
         for (int i = 0; i < n; ++i) {
             Document doc = searcher.getDoc(hits[i + perPage * page].doc);
-            contents[i] = searcher.getHightlight(result.query, hits[i + perPage * page], "contentField");
+            contents[i] = searcher.getHighlight(result.query, hits[i + perPage * page], "contentField");
             if(Objects.equals(contents[i], "")) {
                 contents[i] = doc.get("contentField");
                 if(contents[i].length() > 200) {
                     contents[i] = contents[i].substring(0, 200);
                 }
             }
-            titles[i] = searcher.getHightlight(result.query, hits[i + perPage * page], "titleField");
+            titles[i] = searcher.getHighlight(result.query, hits[i + perPage * page], "titleField");
             if(Objects.equals(titles[i], "")) {
                 titles[i] = doc.get("titleField");
             }

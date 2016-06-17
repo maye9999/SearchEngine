@@ -197,7 +197,7 @@ public class MySearcher {
         return null;
     }
 
-    public String getHightlight(Query query, ScoreDoc scoreDoc, String field) {
+    public String getHighlight(Query query, ScoreDoc scoreDoc, String field) {
         SimpleHTMLFormatter htmlFormatter = new SimpleHTMLFormatter("<mark>", "</mark>");
         Highlighter highlighter = new Highlighter(htmlFormatter, new QueryScorer(query));
         int id = scoreDoc.doc;
@@ -231,7 +231,7 @@ public class MySearcher {
         SearchResult result = mySearcher.searchComplex("清华大学", "", "法学院", "", "", "", 20);
 
         ScoreDoc[] hits = result.scoreDocs;
-//        String hightlight = mySearcher.getHightlight(result.query, hits[1], "contentField");
+//        String hightlight = mySearcher.getHighlight(result.query, hits[1], "contentField");
 //        System.out.println(hightlight);
 //        ScoreDoc[] hits = mySearcher.searchComplex("足球", "", "", "", "PDF", "title", 20);
 //        ScoreDoc[] hits = mySearcher.searchWildCardOrFuzzy("ts?nghua Unive?sity", true, 20);
