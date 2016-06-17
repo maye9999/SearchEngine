@@ -4,7 +4,8 @@
     width: 666px;
 }
 
-.search-result-entry {
+.search-result-entry >mark{
+    
 }
 
 .search-result-entry:hover {

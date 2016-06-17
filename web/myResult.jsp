@@ -137,12 +137,18 @@
                     String[] titles = (String []) request.getAttribute("titles");
                     String[] contents = (String []) request.getAttribute("contents");
                     String[] urls = (String []) request.getAttribute("urls");
+                    String[] types = (String []) request.getAttribute("types");
                     for (int i = 0; i < titles.length; ++i) {
                 %>
                 <div class="search-result-entry">
                     <div class="entry-name lead text-info">
                         <a href="<%= "http://" + urls[i] %>">
-                            <%= titles[i] %>
+                            <%
+                                if (!types[i].equals("HTML")) {
+                                    out.print("[" + types[i] + "]");
+                                }
+                                out.println(titles[i]);
+                            %>
                         </a>
                     </div>
                     <div class="entry-url text-success">

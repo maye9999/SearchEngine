@@ -22,25 +22,36 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int mode = 0;
+        int n = 10;
         if (request.getParameter("mode") != null) {
             mode = Integer.parseInt(request.getParameter("mode"));
         }
-        MySearcher.SearchResult result = searcher.search(request.getParameter("query"), 10);
+        MySearcher.SearchResult result;
+        if (mode == 0) {
+            result = searcher.search(request.getParameter("query"), n);
+        } else if (mode == 1) {
+            result = searcher.searchComplex(request.getParameter("query"), "", "", "", "HTML", "", n);
+        } else {
+            result = searcher.searchComplex(request.getParameter("query"), "", "", "", "NOHTML", "", n);
+        }
         ScoreDoc[] hits = result.scoreDocs;
         String[] titles = new String[hits.length];
         String[] contents = new String[hits.length];
         String[] urls = new String[hits.length];
-        System.out.println("hits number = " + hits.length);
+        String[] types = new String[hits.length];
         for (int i = 0; i < hits.length; ++i) {
-            titles[i] = searcher.getHightlight(result.query, hits[i], "titleField");
             contents[i] = searcher.getHightlight(result.query, hits[i], "contentField");
-            urls[i] = searcher.getHightlight(result.query, hits[i], "urlField");
+            Document doc = searcher.getDoc(hits[i].doc);
+            titles[i] = doc.get("titleField");
+            types[i] = doc.get("typeField");
+            urls[i] = doc.get("urlField");
         }
         request.setAttribute("mode", mode);
         request.setAttribute("currentQuery", request.getParameter("query"));
         request.setAttribute("titles", titles);
         request.setAttribute("contents", contents);
         request.setAttribute("urls", urls);
+        request.setAttribute("types", types);
         request.getRequestDispatcher("myResult.jsp").forward(request, response);
     }
 
