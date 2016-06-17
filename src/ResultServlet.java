@@ -31,14 +31,30 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
             result = searcher.search(request.getParameter("query"), n);
         } else if (mode == 1) {
             result = searcher.searchComplex(request.getParameter("query"), "", "", "", "HTML", "", n);
-        } else {
+        } else if (mode == 2) {
             result = searcher.searchComplex(request.getParameter("query"), "", "", "", "NOHTML", "", n);
+        } else if (mode == 3) {
+            String query = new String(request.getParameter("query").getBytes("UTF-8"));
+            result = searcher.searchWildCardOrFuzzy(query, false, n);
+        } else if (mode == 4) {
+            String query = new String(request.getParameter("query").getBytes("UTF-8"));
+            result = searcher.searchWildCardOrFuzzy(query, true, n);
+        } else {
+            String stringMust = request.getParameter("all-keywords");
+            String stringShould = request.getParameter("any-keywords");
+            String stringNo = request.getParameter("no-keywords");
+            String stringSite = request.getParameter("in-site");
+            String fileType = request.getParameter("doc-type");
+            String searchField = request.getParameter("keyword-pos");
+            result = searcher.searchComplex(stringMust, stringShould, stringNo, stringSite, fileType, searchField, n);
         }
+
         ScoreDoc[] hits = result.scoreDocs;
         String[] titles = new String[hits.length];
         String[] contents = new String[hits.length];
         String[] urls = new String[hits.length];
         String[] types = new String[hits.length];
+
         for (int i = 0; i < hits.length; ++i) {
             contents[i] = searcher.getHightlight(result.query, hits[i], "contentField");
             Document doc = searcher.getDoc(hits[i].doc);
@@ -46,43 +62,13 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
             types[i] = doc.get("typeField");
             urls[i] = doc.get("urlField");
         }
+
         request.setAttribute("mode", mode);
         request.setAttribute("currentQuery", request.getParameter("query"));
         request.setAttribute("titles", titles);
         request.setAttribute("contents", contents);
         request.setAttribute("urls", urls);
         request.setAttribute("types", types);
-        request.getRequestDispatcher("myResult.jsp").forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int mode = 0;
-        if (request.getParameter("mode") != null) {
-            mode = Integer.parseInt(request.getParameter("mode"));
-        }
-        String stringMust = new String(request.getParameter("all-keywords").getBytes("UTF-8"));
-        String stringShould = new String(request.getParameter("any-keywords").getBytes("UTF-8"));
-        String stringNo = new String(request.getParameter("no-keywords").getBytes("UTF-8"));
-        String stringSite = request.getParameter("in-site");
-        String fileType = request.getParameter("doc-type");
-        String searchField = request.getParameter("keyword-pos");
-
-        System.out.println("stringMust : " + stringMust);
-        System.out.println("fileType : " + fileType);
-        MySearcher.SearchResult result = searcher.searchComplex(stringMust, stringShould, stringNo, stringSite, fileType, searchField, 10);
-        ScoreDoc[] hits = result.scoreDocs;
-
-        Document[] docs = new Document[hits.length];
-        System.out.println("hits number = " + hits.length);
-        for (int i = 0; i < hits.length; ++i) {
-            docs[i] = searcher.getDoc(hits[i].doc);
-        }
-        request.setAttribute("mode", mode);
-        request.setAttribute("currentQuery", "");
-        request.setAttribute("docs", docs);
-        request.setAttribute("searcher", searcher);
-        request.setAttribute("query", result.query);
         request.getRequestDispatcher("myResult.jsp").forward(request, response);
     }
 }

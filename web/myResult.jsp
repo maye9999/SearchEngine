@@ -61,22 +61,63 @@
 
     <div class="container">
         <ul class="nav nav-tabs">
-
             <li><a id="search-all" class="search-option-tab">所有</a></li>
             <li><a id="search-web" class="search-option-tab">网页</a></li>
             <li><a id="search-doc" class="search-option-tab">文档</a></li>
-            <li><a id="fuzzy-search" class="search-option-tab">模糊查询</a></li>
-            <li><a id="wildcard-search" class="search-option-tab">通配符搜索</a></li>
+            <li><a data-toggle="collapse" data-target="#fuzzy-search" class="search-option-tab">模糊查询</a></li>
+            <li><a data-toggle="collapse" data-target="#wildcard-search" class="search-option-tab">通配符搜索</a></li>
             <li><a data-toggle="collapse" data-target="#advanced-search" class="search-option-tab">高级搜索</a></li>
         </ul>
 
         <div class="tab-content search-result">
+            <div id="fuzzy-search" class="collapse panel panel-primary advance-search-form">
+                <div class="panel-heading">
+                    模糊搜索
+                </div>
+                <div class="panel-body">
+                    <form id="fuzzy-search-form" class="form-horizontal" role="form" action="/result" method="get">
+                        <input type="text" name="mode" value="3" style="display: none;">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">模糊查询关键词</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="query" placeholder="例如: Tssnghua Unaversity">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0">
+                            <div class="col-md-offset-10 col-md-2">
+                                <button id="fuzzy-search-submmit" type="submit" class="btn btn-primary">重新搜索</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="wildcard-search" class="collapse panel panel-primary advance-search-form">
+                <div class="panel-heading">
+                    通配符搜索
+                </div>
+                <div class="panel-body">
+                    <form id="wildcard-search-form" class="form-horizontal" role="form" action="/result" method="get">
+                        <input type="text" name="mode" value="4" style="display: none;">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">支持 ? 和 *</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="query" placeholder="例如: Ts?nghua Univer*ty">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0">
+                            <div class="col-md-offset-10 col-md-2">
+                                <button id="wildcard-search-submmit" type="submit" class="btn btn-primary">重新搜索</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div id="advanced-search" class="collapse panel panel-primary advance-search-form">
                 <div class="panel-heading">
                     高级搜索选项
                 </div>
                 <div class="panel-body">
-                    <form id="advanced-search-form" class="form-horizontal" role="form" action="/result" method="post">
+                    <form id="advanced-search-form" class="form-horizontal" role="form" action="/result" method="get">
                         <input type="text" name="mode" value="5" style="display: none;">
                         <div class="form-group">
                             <label class="control-label col-md-4">包含以下全部的关键词</label>
@@ -118,8 +159,8 @@
                             <div class="col-md-8">
                                 <select class="form-control" name="keyword-pos">
                                     <option value="">任何地方</option>
-                                    <option value="titleField">仅出现在网站或者文档的标题中</option>
-                                    <option value="urlField">仅出现在 URL 中</option>
+                                    <option value="title">仅出现在网站或者文档的标题中</option>
+                                    <option value="h1">仅出现在网页的 &lt;h1&gt; 中</option>
                                 </select>
                             </div>
                         </div>
@@ -203,12 +244,6 @@
             $('#search-doc').click(function () {
                 window.location.href = '/result?query=' + query + '&mode=2';
             });
-            $('#fuzzy-search').click(function () {
-                window.location.href = '/result?query=' + query + '&mode=3';
-            });
-            $('#wildcard-search').click(function () {
-                window.location.href = '/result?query=' + query + '&mode=4';
-            });
             var mode = <%= request.getAttribute("mode") %>;
             if (mode == 0) {
                 $('#search-all').parent().addClass('active');
@@ -222,6 +257,12 @@
                 $('#wildcard-search').parent().addClass('active');
             }
 
+            $('#fuzzy-search-submmit').click(function () {
+                $('#fuzzy-search-form').submit();
+            })
+            $('#wildcard-search-submmit').click(function () {
+                $('#wildcard-search-form').submit();
+            })
             $('#advanced-search-submmit').click(function () {
                 $('#advanced-search-form').submit();
             })
