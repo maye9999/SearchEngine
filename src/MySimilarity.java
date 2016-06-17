@@ -238,7 +238,7 @@ public class MySimilarity extends Similarity{
         float p = Float.intBitsToFloat((int)pageRank.get(doc));
         subs.add(Explanation.match(p, "pageRank"));
         return Explanation.match(
-                boostExpl.getValue() * stats.idf.getValue() * tfNormExpl.getValue() * p,
+                boostExpl.getValue() * stats.idf.getValue() * tfNormExpl.getValue() * (float) Math.sqrt(p),
                 "score(doc="+doc+",freq="+freq+"), product of:", subs);
     }
 

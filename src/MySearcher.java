@@ -190,6 +190,11 @@ public class MySearcher {
     public SearchResult search(String queryString, int maxNum) {
         try {
             Query query = buildQuery(queryString);
+            System.out.println(searcher.explain(query, 620).toHtml());
+            System.out.println("==============");
+            System.out.println(searcher.explain(query, 17038).toHtml());
+            System.out.println("==============");
+            System.out.println(searcher.explain(query, 1683).toHtml());
             return new SearchResult(searcher.search(query, maxNum).scoreDocs, query);
         } catch (IOException e) {
             e.printStackTrace();
@@ -228,7 +233,7 @@ public class MySearcher {
 //        System.out.println("avgLength = " + mySearcher.getAvgLength());
 
 
-        SearchResult result = mySearcher.searchComplex("清华大学", "", "法学院", "", "", "", 20);
+        SearchResult result = mySearcher.search("相声", 3);
 
         ScoreDoc[] hits = result.scoreDocs;
 //        String hightlight = mySearcher.getHighlight(result.query, hits[1], "contentField");

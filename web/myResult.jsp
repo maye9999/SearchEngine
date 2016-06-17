@@ -114,7 +114,7 @@
                     <input type="text" name="mode" value="4" style="display: none;">
                     <input type="text" name="page" value="0" style="display: none;">
                     <div class="form-group">
-                        <label class="control-label col-md-4">支持 ? 和 *</label>
+                        <label class="control-label col-md-4">通配符（正则表达式）查询</label>
                         <div class="col-md-8">
                             <input required type="text" class="form-control" name="query" placeholder="例如: T?inghua Un*ty">
                         </div>
