@@ -1,10 +1,12 @@
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.*;
+import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.QueryBuilder;
 import org.lionsoul.jcseg.analyzer.v5x.JcsegAnalyzer5X;
@@ -26,6 +28,16 @@ public class MySearcher {
     private IndexSearcher searcher;
     private Analyzer analyzer;
     public HashMap<Integer, Double> id2pageRank;
+
+    public class SearchResult {
+        ScoreDoc[] scoreDocs;
+        Query query;
+
+        SearchResult(ScoreDoc[] scoreDocs, Query query) {
+            this.scoreDocs = scoreDocs;
+            this.query = query;
+        }
+    }
 
     public MySearcher(String indexDir) {
         id2pageRank = new HashMap<>();
@@ -125,7 +137,7 @@ public class MySearcher {
         }
     }
 
-    public ScoreDoc[] searchWildCardOrFuzzy(String queryString , boolean useWildCard, int maxNum) {
+    public SearchResult searchWildCardOrFuzzy(String queryString , boolean useWildCard, int maxNum) {
         queryString = queryString.toLowerCase(Locale.ENGLISH);
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
         String[] strings = queryString.split(" ");
@@ -135,7 +147,8 @@ public class MySearcher {
             builder.add(buildQuery(string, "", useWildCard, !useWildCard), BooleanClause.Occur.MUST);
         }
         try {
-            return searcher.search(builder.build(), maxNum).scoreDocs;
+            Query query = builder.build();
+            return new SearchResult(searcher.search(query, maxNum).scoreDocs, query);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -143,7 +156,7 @@ public class MySearcher {
     }
 
 
-    public ScoreDoc[] searchComplex(String stringMust, String stringShould, String stringNo, String stringSite, String fileType, String searchField, int maxNum) {
+    public SearchResult searchComplex(String stringMust, String stringShould, String stringNo, String stringSite, String fileType, String searchField, int maxNum) {
         String[] stringsMust = stringMust.split(" ");
         String[] stringsShould = stringShould.split(" ");
         String[] stringsNo = stringNo.split(" ");
@@ -173,14 +186,15 @@ public class MySearcher {
             builder.add(query, BooleanClause.Occur.MUST);
         }
         try {
-            return searcher.search(builder.build(), maxNum).scoreDocs;
+            Query query = builder.build();
+            return new SearchResult(searcher.search(query, maxNum).scoreDocs, query);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public ScoreDoc[] search(String queryString, int maxNum) {
+    public SearchResult search(String queryString, int maxNum) {
 //        MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[]{"contentField", "titleField", "h1Field", "h2Field"}, analyzer, boosts);
 
         try {
@@ -192,11 +206,27 @@ public class MySearcher {
 //            Query query1 = new TermQuery(new Term("urlField", "www.tsinghua.edu.cn/publish/newthu/index.html"));
 //            System.out.println(getDoc(947).get("urlField"));
 //            System.out.println(searcher.explain(query, 30418).toHtml());
-            return searcher.search(query, maxNum).scoreDocs;
+            return new SearchResult(searcher.search(query, maxNum).scoreDocs, query);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String getHightlight(Query query, ScoreDoc scoreDoc, String field) {
+        SimpleHTMLFormatter htmlFormatter = new SimpleHTMLFormatter();
+        Highlighter highlighter = new Highlighter(htmlFormatter, new QueryScorer(query));
+        int id = scoreDoc.doc;
+        Document doc = getDoc(id);
+        String txt = doc.get(field);
+        TokenStream tokenStream = null;
+        try {
+            tokenStream = TokenSources.getAnyTokenStream(reader, id, field, analyzer);
+            return highlighter.getBestFragments(tokenStream, txt, 3, "...");
+        } catch (IOException | InvalidTokenOffsetsException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Document getDoc(int docID) {
@@ -209,18 +239,23 @@ public class MySearcher {
     }
 
     public static void main(String[] args) {
-        MySearcher mySearcher = new MySearcher("index-new-analyzer");
+        MySearcher mySearcher = new MySearcher("index-new");
         mySearcher.getId2PageRank();
 //        System.out.println("avgLength = " + mySearcher.getAvgLength());
 
-        ScoreDoc[] hits = mySearcher.search("清华大学", 20);
+
+        SearchResult result = mySearcher.search("清华大学计算机系", 20);
+
+        ScoreDoc[] hits = result.scoreDocs;
+        String hightlight = mySearcher.getHightlight(result.query, hits[1], "contentField");
+        System.out.println(hightlight);
 //        ScoreDoc[] hits = mySearcher.searchComplex("足球", "", "", "", "PDF", "title", 20);
 //        ScoreDoc[] hits = mySearcher.searchWildCardOrFuzzy("ts?nghua Unive?sity", true, 20);
 //        ScoreDoc[] hits = mySearcher.searchWildCardOrFuzzy("tssnghua Univewsity", false, 20);
         for (ScoreDoc hit : hits) {
             Document doc = mySearcher.getDoc(hit.doc);
             int id = Integer.parseInt(doc.get("idField"));
-//            System.out.println(id);
+            System.out.println(id);
             System.out.println("doc id = " + hit.doc + "\t\ttitle = " + doc.get("titleField") + "\t\tscore = " + hit.score + "\t\tpr = " + mySearcher.id2pageRank.get(id) + "\t\turl = " + doc.get("urlField"));
         }
     }
