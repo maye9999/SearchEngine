@@ -36,3 +36,11 @@
 .search-option-tab {
     cursor: pointer;
 }
+
+.brand {
+    font-family: "Avenir Next";
+}
+
+#top-searcher {
+    width: 556px;
+}

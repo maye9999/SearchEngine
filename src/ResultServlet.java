@@ -15,8 +15,8 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
     int maxNum = 1000;
     int perPage = 10;
 
-//    final String indexPosition = "/Users/lzhengning/Desktop/index-new-analyzer";
-    final String indexPosition = "E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\project\\SearchEngine\\index-new";
+    final String indexPosition = "/Users/lzhengning/Desktop/index-new";
+//    final String indexPosition = "E:\\MaYe\\THU\\Study\\Junior_2\\Search_Engine\\project\\SearchEngine\\index-new";
 
     @Override
     public void init() throws ServletException {

@@ -32,7 +32,7 @@
                         <img src="/image/logo.png">
                     </div>
                     <div>
-                        <h1>ThuThuGo</h1>
+                        <h1 class="brand">ThuGo</h1>
                         <form action="result" method="get">
                             <div class="input-group">
                                 <input required type="text" class="form-control input-lg" name="query" placeholder="Search for ...">

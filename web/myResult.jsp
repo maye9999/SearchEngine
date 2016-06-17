@@ -50,7 +50,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/search">ThuGo</a>
+            <a class="navbar-brand brand" href="/search">ThuGo</a>
         </div>
 
         <div class="navbar-collapse collapse" id="navbar-collapsible">
@@ -58,9 +58,9 @@
                 <div class="form-group">
                     <div class="input-group">
                         <% if (mode != 5) {%>
-                            <input required type="text" class="form-control" name="query" value='<%= request.getAttribute("currentQuery")%>'>
+                            <input required type="text" id="top-searcher" class="form-control top-search" name="query" value='<%= request.getAttribute("currentQuery")%>'>
                         <% } else { %>
-                            <input required type="text" class="form-control" name="query">
+                            <input required type="text" id="top-searcher" class="form-control top-search" name="query">
                         <% }        %>
 
                         <input type="text" name="page" value="0" style="display: none;">
@@ -206,20 +206,20 @@
                             if (!types[i].equals("HTML")) {
                                 out.print("[" + types[i] + "]");
                             }
-                            if (titles[i].length() < 75) {
+                            if (titles[i].length() < 80) {
                                 out.println(titles[i]);
                             } else {
-                                out.println(titles[i].substring(0, 75) + "...");
+                                out.println(titles[i].substring(0, 80) + "...");
                             }
                         %>
                     </a>
                 </div>
                 <div class="entry-url text-success">
                     <%
-                        if (urls[i].length() < 100) {
+                        if (urls[i].length() < 90) {
                             out.println(urls[i]);
                         } else {
-                            out.println(urls[i].substring(0, 100) + "...");
+                            out.println(urls[i].substring(0, 90) + "...");
                         }
                     %>
                 </div>

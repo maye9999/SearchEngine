@@ -46,3 +46,8 @@ html, body {
 .btn-default {
 
 }
+
+.brand {
+    font-family: "Avenir Next";
+    font-size: 48pt;
+}
