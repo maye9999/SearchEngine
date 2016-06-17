@@ -26,7 +26,14 @@
     <link rel="stylesheet" href="/css/result.css">
 
     <title>
-        <%=request.getAttribute("currentQuery") %> - 搜索结果
+        <%
+            int mode = (int) request.getAttribute("mode");
+            if (mode != 5) {
+                out.println((String) request.getAttribute("currentQuery") + " - 搜索结果");
+            } else {
+                out.println("高级搜索 - 搜索结果");
+            }
+        %>
     </title>
 </head>
 
@@ -51,6 +58,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <input type="text" class="form-control" name="query" value='<%= request.getAttribute("currentQuery")%>'>
+                            <input type="text" name="page" value="0" style="display: none;">
                             <span class="input-group-btn"><button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button></span>
                         </div>
                     </div>
@@ -77,6 +85,7 @@
                 <div class="panel-body">
                     <form id="fuzzy-search-form" class="form-horizontal" role="form" action="/result" method="get">
                         <input type="text" name="mode" value="3" style="display: none;">
+                        <input type="text" name="page" value="0" style="display: none;">
                         <div class="form-group">
                             <label class="control-label col-md-4">模糊查询关键词</label>
                             <div class="col-md-8">
@@ -98,10 +107,11 @@
                 <div class="panel-body">
                     <form id="wildcard-search-form" class="form-horizontal" role="form" action="/result" method="get">
                         <input type="text" name="mode" value="4" style="display: none;">
+                        <input type="text" name="page" value="0" style="display: none;">
                         <div class="form-group">
                             <label class="control-label col-md-4">支持 ? 和 *</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="query" placeholder="例如: Ts?nghua Univer*ty">
+                                <input type="text" class="form-control" name="query" placeholder="例如: T?inghua Un*ty">
                             </div>
                         </div>
                         <div class="form-group" style="margin-bottom: 0">
@@ -119,6 +129,7 @@
                 <div class="panel-body">
                     <form id="advanced-search-form" class="form-horizontal" role="form" action="/result" method="get">
                         <input type="text" name="mode" value="5" style="display: none;">
+                        <input type="text" name="page" value="0" style="display: none;">
                         <div class="form-group">
                             <label class="control-label col-md-4">包含以下全部的关键词</label>
                             <div class="col-md-8">
@@ -236,13 +247,13 @@
         $(function () {
             var query = '<%= request.getAttribute("currentQuery") %>';
             $('#search-all').click(function () {
-                window.location.href = '/result?query=' + query + '&mode=0';
+                window.location.href = '/result?query=' + query + '&mode=0&page=0';
             });
             $('#search-web').click(function () {
-                window.location.href = '/result?query=' + query + '&mode=1';
+                window.location.href = '/result?query=' + query + '&mode=1&page=0';
             });
             $('#search-doc').click(function () {
-                window.location.href = '/result?query=' + query + '&mode=2';
+                window.location.href = '/result?query=' + query + '&mode=2&page=0';
             });
             var mode = <%= request.getAttribute("mode") %>;
             if (mode == 0) {

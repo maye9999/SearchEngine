@@ -11,6 +11,9 @@ import java.io.IOException;
  */
 public class ResultServlet extends javax.servlet.http.HttpServlet {
     MySearcher searcher;
+    int maxNum = 1000;
+    int perPage = 10;
+
     final String indexPosition = "/Users/lzhengning/Desktop/index-new-analyzer";
 
     @Override
@@ -21,24 +24,25 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int page = Integer.parseInt(request.getParameter("page"));
         int mode = 0;
-        int n = 10;
         if (request.getParameter("mode") != null) {
             mode = Integer.parseInt(request.getParameter("mode"));
         }
+
         MySearcher.SearchResult result;
         if (mode == 0) {
-            result = searcher.search(request.getParameter("query"), n);
+            result = searcher.search(request.getParameter("query"), maxNum);
         } else if (mode == 1) {
-            result = searcher.searchComplex(request.getParameter("query"), "", "", "", "HTML", "", n);
+            result = searcher.searchComplex(request.getParameter("query"), "", "", "", "HTML", "", maxNum);
         } else if (mode == 2) {
-            result = searcher.searchComplex(request.getParameter("query"), "", "", "", "NOHTML", "", n);
+            result = searcher.searchComplex(request.getParameter("query"), "", "", "", "NOHTML", "", maxNum);
         } else if (mode == 3) {
             String query = new String(request.getParameter("query").getBytes("UTF-8"));
-            result = searcher.searchWildCardOrFuzzy(query, false, n);
+            result = searcher.searchWildCardOrFuzzy(query, false, maxNum);
         } else if (mode == 4) {
             String query = new String(request.getParameter("query").getBytes("UTF-8"));
-            result = searcher.searchWildCardOrFuzzy(query, true, n);
+            result = searcher.searchWildCardOrFuzzy(query, true, maxNum);
         } else {
             String stringMust = request.getParameter("all-keywords");
             String stringShould = request.getParameter("any-keywords");
@@ -46,23 +50,24 @@ public class ResultServlet extends javax.servlet.http.HttpServlet {
             String stringSite = request.getParameter("in-site");
             String fileType = request.getParameter("doc-type");
             String searchField = request.getParameter("keyword-pos");
-            result = searcher.searchComplex(stringMust, stringShould, stringNo, stringSite, fileType, searchField, n);
+            result = searcher.searchComplex(stringMust, stringShould, stringNo, stringSite, fileType, searchField, maxNum);
         }
 
         ScoreDoc[] hits = result.scoreDocs;
-        String[] titles = new String[hits.length];
-        String[] contents = new String[hits.length];
-        String[] urls = new String[hits.length];
-        String[] types = new String[hits.length];
+        String[] titles = new String[perPage];
+        String[] contents = new String[perPage];
+        String[] urls = new String[perPage];
+        String[] types = new String[perPage];
 
-        for (int i = 0; i < hits.length; ++i) {
-            contents[i] = searcher.getHightlight(result.query, hits[i], "contentField");
-            Document doc = searcher.getDoc(hits[i].doc);
+        for (int i = 0; i < perPage; ++i) {
+            contents[i] = searcher.getHightlight(result.query, hits[i + perPage * page], "contentField");
+            Document doc = searcher.getDoc(hits[i + perPage * page].doc);
             titles[i] = doc.get("titleField");
             types[i] = doc.get("typeField");
             urls[i] = doc.get("urlField");
         }
 
+        request.setAttribute("page", page);
         request.setAttribute("mode", mode);
         request.setAttribute("currentQuery", request.getParameter("query"));
         request.setAttribute("titles", titles);
