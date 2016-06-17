@@ -181,9 +181,14 @@ public class MySearcher {
             builder.add(query, BooleanClause.Occur.MUST);
         }
         if (!Objects.equals(fileType, "")) {
-            assert (Objects.equals(fileType, "PDF") || Objects.equals(fileType, "DOC") || Objects.equals(fileType, "DOCX"));
-            Query query = new TermQuery(new Term("typeField", fileType));
-            builder.add(query, BooleanClause.Occur.MUST);
+            assert (Objects.equals(fileType, "PDF") || Objects.equals(fileType, "DOC") || Objects.equals(fileType, "DOCX") || Objects.equals(fileType, "HTML") || Objects.equals(fileType, "NOHTML"));
+            if (Objects.equals(fileType, "NOHTML")) {
+                Query query = new TermQuery(new Term("typeField", "HTML"));
+                builder.add(query, BooleanClause.Occur.MUST_NOT);
+            } else {
+                Query query = new TermQuery(new Term("typeField", fileType));
+                builder.add(query, BooleanClause.Occur.MUST);
+            }
         }
         try {
             Query query = builder.build();
